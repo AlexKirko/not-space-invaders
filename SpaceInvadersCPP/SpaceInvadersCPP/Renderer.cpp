@@ -14,12 +14,13 @@ void Renderer::init_render(const RenderedObject& rObj,
 	float width = rObj.get_width();
 	float height = rObj.get_height();
 
+	std::array<float, 4> tex_smpl_coords = rObj.get_tex_smpl_coords();
 
 	float texture_positions[] = {
-		b_left[0],         b_left[1],          0.0, 0.0,
-		b_left[0] + width, b_left[1],          1.0, 0.0,
-		b_left[0] + width, b_left[1] + height, 1.0, 1.0,
-		b_left[0],         b_left[1] + height, 0.0, 1.0
+		b_left[0],         b_left[1],          tex_smpl_coords[0], tex_smpl_coords[1],
+		b_left[0] + width, b_left[1],          tex_smpl_coords[2], tex_smpl_coords[1],
+		b_left[0] + width, b_left[1] + height, tex_smpl_coords[2], tex_smpl_coords[3],
+		b_left[0],         b_left[1] + height, tex_smpl_coords[0], tex_smpl_coords[3]
 	};
 
 	float basic_positions[] = {

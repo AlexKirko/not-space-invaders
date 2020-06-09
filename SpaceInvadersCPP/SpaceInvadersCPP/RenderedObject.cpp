@@ -11,12 +11,14 @@ RenderedObject::RenderedObject(
 	float angle,
 	const std::array<float, 2>& velocity,
 	const std::array<float, 4>& color,
-	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures) :
+	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures,
+	const std::array<float, 4>& tex_smpl_coords) :
 	m_bottomleft{bottomleft}, m_angle{angle},
 	m_width{width}, m_height{height},
 	m_movable{movable}, m_use_textures{use_textures},
 	m_color{color}, m_current_texture{-1}, m_velocity{0.0, 0.0},
-	m_textures{nullptr}
+	m_textures{nullptr},
+	m_tex_smpl_coords{tex_smpl_coords}
 {
 	// Check for conflicts
 	if (!movable && velocity != std::array<float, 2>{0.0, 0.0})

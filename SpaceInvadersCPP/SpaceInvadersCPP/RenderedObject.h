@@ -25,6 +25,8 @@ private:
 	float m_angle;
 	std::array<float, 2> m_velocity;
 	std::array<float, 4> m_color;
+	// left, down, up, right
+	std::array<float, 4> m_tex_smpl_coords;
 
 	int m_current_texture;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_textures;
@@ -41,7 +43,8 @@ public:
 		const std::array<float, 2>& velocity = std::array<float, 2>{0.0, 0.0},
 		const std::array<float, 4>& color = std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
 		std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures =
-		std::shared_ptr<std::vector<std::unique_ptr<Texture>>>{nullptr});
+		std::shared_ptr<std::vector<std::unique_ptr<Texture>>>{nullptr},
+		const std::array<float, 4>& tex_smpl_coords = std::array<float, 4>{0.0, 0.0, 1.0, 1.0});
 
 	RenderedObject(const RenderedObject& other);
 	~RenderedObject();
@@ -68,6 +71,8 @@ public:
 	const std::array<float, 4>& get_color() const { return m_color; }
 
 	const std::array<float, 2>& get_bottomleft() const { return m_bottomleft; }
+
+	const std::array<float, 4>& get_tex_smpl_coords() const { return m_tex_smpl_coords; }
 
 	void register_renderer(std::shared_ptr<Renderer>& renderer) { m_renderer = renderer; }
 
