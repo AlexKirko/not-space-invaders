@@ -25,6 +25,7 @@
 // and access to context
 #include <GLFW/glfw3.h>
 
+#include <array>
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
@@ -198,11 +199,34 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	
+
+	Texture texture{ "cpp_logo_200.png" };
+	texture.bind();
+	auto ro_tex = std::make_shared<std::vector<Texture>>();
+	ro_tex->push_back(texture);
+	texture.unbind();
+
+	// Create a sample RenderedObject
+	RenderedObject rObj(
+		std::array<float, 2>{450.0, 350.0},
+		50, 50,
+		false, true,
+		0.0,
+		std::array<float, 2>{0.0, 0.0},
+		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
+		ro_tex
+	);
+	rObj.set_current_texture(0);
+
+	std::array<float, 2> b_left = rObj.get_bottomleft();
+	float width = rObj.get_width();
+	float height = rObj.get_height();
+
 	float positions[] = {
-		200.0, 100.0, 0.0, 0.0,
-		600.0, 100.0, 1.0, 0.0,
-		600.0, 500.0, 1.0, 1.0,
-		200.0, 500.0, 0.0, 1.0
+		b_left[0],         b_left[1],          0.0, 0.0,
+		b_left[0] + width, b_left[1],          1.0, 0.0,
+		b_left[0] + width, b_left[1] + height, 1.0, 1.0,
+		b_left[0],         b_left[1] + height, 0.0, 1.0
 	};
 
 	unsigned int indices[] = {
@@ -221,16 +245,24 @@ int main()
 
 	IndexBuffer iBuffer{ indices, 2 * 3 };
 
-
-	Shader shader("texture_v.shader", "texture_f.shader");
-	shader.bind();
+	Shader shader{};
+	if (rObj.get_use_textures())
+	{
+		shader.reset_shaders("texture_v.shader", "texture_f.shader");
+		shader.bind();
+	}
+	else
+	{
+		shader.reset_shaders("basic_v.shader", "basic_f.shader");
+		shader.bind();
+	}
 
 	//std::array<float, 4> color{ 1.0f, 0.2f, 0.2f, 1.0f };
 	//shader.set_uniform_4f("u_color", color);
-
-	Texture texture{"cpp_logo_200.png"};
-	texture.bind();
-	shader.set_uniform_1i("u_texture", 0);
+	if (rObj.get_use_textures())
+		// Since this is a basic sprite engine, we don't use
+		// layered textures, so the slot is always 0.
+		shader.set_uniform_1i("u_texture", 0);
 
 	// Fix the image aspect ratio via linear transformation (orthonormal projection)
 	glm::mat4 projection = glm::ortho(0.0, static_cast<double>(WIDTH),
@@ -241,7 +273,7 @@ int main()
 	va.unbind();
 	shader.unbind();
 	iBuffer.unbind();
-	texture.unbind();
+
 
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
@@ -254,7 +286,7 @@ int main()
 
 		va.bind();
 		iBuffer.bind();
-		texture.bind();
+		rObj.get_current_texture().bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		va.unbind();
 		shader.unbind();

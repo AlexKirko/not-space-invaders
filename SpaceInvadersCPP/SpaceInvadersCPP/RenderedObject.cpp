@@ -74,12 +74,12 @@ void RenderedObject::set_current_texture(int current_texture)
 	m_current_texture = current_texture;
 }
 
-const int RenderedObject::get_current_texture() const
+const Texture& RenderedObject::get_current_texture() const
 {
 	if (!m_use_textures)
 	{
 		throw std::runtime_error("Current texture not set"
 			" or not in use.");
 	}
-	return m_current_texture;
+	return (*m_textures)[m_current_texture];
 }

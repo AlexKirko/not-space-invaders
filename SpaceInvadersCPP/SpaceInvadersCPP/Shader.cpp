@@ -46,10 +46,25 @@ const int Shader::get_uniform_location(const std::string& name) const
 	return location;
 }
 
+Shader::Shader()
+{
+	m_uid = glCreateProgram();
+}
+
 Shader::Shader(const std::string& vertex_filepath, const std::string& fragment_filepath)
 {
 	m_uid = glCreateProgram();
 	
+	reset_shaders(vertex_filepath, fragment_filepath);
+}
+
+Shader::~Shader()
+{
+	glDeleteProgram(m_uid);
+}
+
+void Shader::reset_shaders(const std::string& vertex_filepath, const std::string& fragment_filepath)
+{
 	std::string vertex_shader{ load_shader(vertex_filepath) };
 	std::string fragment_shader{ load_shader(fragment_filepath) };
 	unsigned int vs{ compile_shader(GL_VERTEX_SHADER, vertex_shader) };
@@ -80,13 +95,10 @@ Shader::Shader(const std::string& vertex_filepath, const std::string& fragment_f
 		throw std::runtime_error("Shader validation failed.");
 	}
 
+	glDetachShader(m_uid, vs);
+	glDetachShader(m_uid, fs);
 	glDeleteShader(vs);
 	glDeleteShader(fs);
-}
-
-Shader::~Shader()
-{
-	glDeleteProgram(m_uid);
 }
 
 void Shader::bind() const

@@ -41,13 +41,16 @@ public:
 
 	void set_textures(std::shared_ptr<std::vector<Texture>> textures);
 
-	void set_current_texture(int bitmap_ind);
-	const int get_current_texture() const;
+	void set_current_texture(int current_texture);
+	const Texture& get_current_texture() const;
 
 	const bool get_use_textures() const { return m_use_textures; }
 
 	void set_angle(float angle) { m_angle = angle;	}
 	const float get_angle() const { return m_angle; }
+	
+	const float get_width() const { return m_width; }
+	const float get_height() const { return m_height; }
 
 	const std::array<float, 2>& get_bottomleft() const { return m_bottomleft; }
 };

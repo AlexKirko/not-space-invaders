@@ -20,8 +20,11 @@ private:
 	const unsigned int compile_shader(unsigned int type, const std::string& source) const;
 	const int get_uniform_location(const std::string& name) const;
 public:
+	Shader();
 	Shader(const std::string& vertex_filepath, const std::string& fragment_filepath);
 	~Shader();
+
+	void reset_shaders(const std::string& vertex_filepath, const std::string& fragment_filepath);
 
 	void bind() const;
 	void unbind() const;
