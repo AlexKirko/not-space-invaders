@@ -16,11 +16,14 @@
 #include <fstream>
 
 // Necessary to force program running on Nvidia
+#define NVIDIA_GPU
+#ifdef NVIDIA_GPU
 #include <Windows.h>
 
 extern "C" {
 	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
+#endif
 
 void error_callback(int error_code, const char* description)
 {
