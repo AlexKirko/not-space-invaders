@@ -7,6 +7,7 @@
 #include "AlienBullet.h"
 #include "RenderedObject.h"
 
+#include <algorithm>
 #include <memory>
 #include <vector>
 

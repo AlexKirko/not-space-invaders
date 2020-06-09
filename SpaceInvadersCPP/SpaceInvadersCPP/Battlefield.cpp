@@ -94,9 +94,29 @@ void Battlefield::move_aliens(float time_elapsed)
 
 void Battlefield::move_alien_bullets(float time_elapsed)
 {
+	bool cleanup = false;
 	for (auto& alien_bullet : m_alien_bullets)
 	{
 		alien_bullet->gradient_move(time_elapsed);
+		if (alien_bullet->get_bottomleft()[1] + alien_bullet->get_height() < 0)
+		{
+			// Destroy off-screen bullet
+			// This leaves empty pointers in m_alien_bullets
+			// but avoids constant resizing
+			alien_bullet.reset();
+			cleanup = true;
+		}
+	}
+	if (cleanup)
+	{
+		m_alien_bullets.erase(std::remove_if(
+			m_alien_bullets.begin(), 
+			m_alien_bullets.end(),
+			[](std::unique_ptr<AlienBullet>& alien_bullet)
+			{
+				return alien_bullet == nullptr;
+			}
+			));
 	}
 }
 
