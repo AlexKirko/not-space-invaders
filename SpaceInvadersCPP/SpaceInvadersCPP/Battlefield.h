@@ -35,10 +35,6 @@ private:
 	void move_alien_bullets(float time_elapsed);
 	void move_player_bullets(float time_elapsed);
 	void move_player(float time_elapsed);
-	void render_aliens();
-	void render_alien_bullets();
-	void render_player();
-	void render_player_bullets();
 
 	template<typename rObjType>
 	void render(std::unique_ptr<rObjType>& r_object);
