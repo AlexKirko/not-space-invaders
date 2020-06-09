@@ -12,6 +12,7 @@
 class RenderedObject
 {
 private:
+	int m_uid;
 	std::array<float, 2> m_bottomleft;
 	// Width and height are in pixels
 	const int m_width;
@@ -25,6 +26,7 @@ private:
 	int m_current_texture;
 	std::shared_ptr<std::vector<Texture>> m_textures;
 
+	static int rObj_count;
 public:
 	RenderedObject(
 		const std::array<float, 2>& bottomleft,
@@ -35,6 +37,8 @@ public:
 		const std::array<float, 2>& velocity = std::array<float, 2>{0.0, 0.0},
 		const std::array<float, 4>& color = std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
 		std::shared_ptr<std::vector<Texture>> textures = std::shared_ptr<std::vector<Texture>>{nullptr});
+
+	RenderedObject(const RenderedObject& other);
 
 	void move_to(const std::array<float, 2>& bottomleft);
 	void set_velocity(const std::array<float, 2>& velocity);
@@ -51,6 +55,8 @@ public:
 	
 	const float get_width() const { return m_width; }
 	const float get_height() const { return m_height; }
+
+	const int get_uid() const { return m_uid; }
 
 	void set_color(const std::array<float, 4>& color) { m_color = color; }
 	const std::array<float, 4>& get_color() const { return m_color; }

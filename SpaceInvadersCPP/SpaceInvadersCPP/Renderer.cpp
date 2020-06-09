@@ -85,39 +85,37 @@ void Renderer::init_render(const RenderedObject& rObj,
 
 	// Cache render data in the object
 	auto rData_ptr = std::make_unique<RenderData>(va_ptr, vb_ptr, ib_ptr, shader_ptr);
-	std::pair<const RenderedObject*, std::unique_ptr<RenderData>> to_insert =
-		std::make_pair( &rObj, std::move(rData_ptr) );
+	std::pair<int, std::unique_ptr<RenderData>> to_insert =
+		std::make_pair( rObj.get_uid(), std::move(rData_ptr) );
 	m_cached_rdata.insert(std::move(to_insert));
 }
 
 // Always init_render before render just in case the program
 // reuses a memory address for another RenderedObject
-void Renderer::render(const RenderedObject* const r_obj_ptr,
+void Renderer::render(const RenderedObject& rObj,
 	int s_width, int s_height)
 {
-	auto pos = m_cached_rdata.find(r_obj_ptr);
+	auto pos = m_cached_rdata.find(rObj.get_uid());
 	// Silently init if we didn't init before
-	// Warning: not completely safe. Relies on object pointers
-	// being unique.
 	if (pos == m_cached_rdata.end())
 	{
-		init_render(*r_obj_ptr, s_width, s_height);
-		// The lookup can be refactored away.
+		init_render(rObj, s_width, s_height);
+		// The extra lookup can be refactored away.
 		// But we should always init before render anyway.
-		pos = m_cached_rdata.find(r_obj_ptr);
+		pos = m_cached_rdata.find(rObj.get_uid());
 	}
 
 	(*pos->second).shader->bind();
 	(*pos->second).va->bind();
 	(*pos->second).ib->bind();
-	if (r_obj_ptr->get_use_textures())
-		r_obj_ptr->get_current_texture().bind();
+	if (rObj.get_use_textures())
+		rObj.get_current_texture().bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	(*pos->second).shader->unbind();
 	(*pos->second).va->unbind();
 	(*pos->second).ib->unbind();
-	if (r_obj_ptr->get_use_textures())
-		r_obj_ptr->get_current_texture().unbind();
+	if (rObj.get_use_textures())
+		rObj.get_current_texture().unbind();
 }
 
 void Renderer::clear(const std::array<float, 4>& bckgrnd_color)

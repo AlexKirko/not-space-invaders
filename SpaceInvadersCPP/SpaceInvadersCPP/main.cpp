@@ -204,9 +204,9 @@ int main()
 
 	// Create a sample RenderedObject
 	RenderedObject rObj(
-		std::array<float, 2>{450.0, 350.0},
+		std::array<float, 2>{100.0, 50.0},
 		50, 50,
-		false, true,
+		true, true,
 		0.0,
 		std::array<float, 2>{0.0, 0.0},
 		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
@@ -214,17 +214,38 @@ int main()
 	);
 	rObj.set_current_texture(0);
 
+	// Make an array of objects by copying
+	std::vector<RenderedObject> rObj_v{};
+	for (int i{ 0 }; i < 10; ++i)
+	{
+		for (int k{ 0 }; k < 5; ++k)
+		{
+			RenderedObject rObj_push(rObj);
+			rObj_push.move_to(std::array<float, 2>{
+				rObj.get_bottomleft()[0] + i * 60,
+				rObj.get_bottomleft()[0] + k * 60,
+			});
+			rObj_v.push_back(rObj_push);
+		}
+	}
+
 	Renderer renderer{};
 
-	renderer.init_render(rObj, WIDTH, HEIGHT);
+	for (auto rObject : rObj_v)
+	{
+		renderer.init_render(rObject, WIDTH, HEIGHT);
+	}
 
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Render
 		renderer.clear(std::array<float, 4> {0.0f, 0.0f, 0.0f, 1.0f});
-		
-		renderer.render(&rObj, WIDTH, HEIGHT);
+
+		for (auto rObject : rObj_v)
+		{
+			renderer.render(rObject, WIDTH, HEIGHT);
+		}
 
 
 		// Show rendered window

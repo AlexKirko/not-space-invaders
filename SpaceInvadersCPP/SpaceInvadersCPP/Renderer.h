@@ -71,14 +71,14 @@ private:
 	}
 	};
 	
-	std::map<const RenderedObject*, std::unique_ptr<RenderData>> m_cached_rdata;
+	std::map<int, std::unique_ptr<RenderData>> m_cached_rdata;
 
 public:
 	Renderer();
 
 	void init_render(const RenderedObject& rObj,
 		int s_width, int s_height);
-	void render(const RenderedObject* const rObj_ptr,
+	void render(const RenderedObject& rObj,
 		int s_width, int s_height);
 	void clear(const std::array<float, 4>& bckgrnd_color);
 };

@@ -1,5 +1,6 @@
 #include "RenderedObject.h"
 
+int RenderedObject::rObj_count{ 0 };
 
 RenderedObject::RenderedObject(
 	const std::array<float, 2>& bottomleft,
@@ -29,6 +30,22 @@ RenderedObject::RenderedObject(
 	}
 	m_velocity = velocity;
 	m_textures = textures;
+
+	// Record unique id
+	m_uid = rObj_count;
+	++rObj_count;
+}
+
+RenderedObject::RenderedObject(const RenderedObject& other) :
+	m_bottomleft{other.m_bottomleft}, m_angle{other.m_angle},
+	m_width{other.m_width}, m_height{other.m_height},
+	m_movable{other.m_movable}, m_use_textures{other.m_use_textures},
+	m_color{other.m_color}, m_current_texture{other.m_current_texture},
+	m_velocity{other.m_velocity}, m_textures{other.m_textures}
+{
+	// Record unique id
+	m_uid = rObj_count;
+	++rObj_count;
 }
 
 void RenderedObject::move_to(const std::array<float, 2>& bottomleft)
