@@ -38,24 +38,13 @@ extern "C" {
 }
 #endif
 
-void error_callback(int error_code, const char* description)
+static void error_callback(int error_code, const char* description)
 {
 	std::cerr << "Error: " << description;
 }
 
-int main()
+static inline void set_window_properties()
 {
-	// Window size
-	const GLint WIDTH{ 800 };
-	const GLint HEIGHT{ 600 };
-
-	glfwSetErrorCallback(error_callback);
-
-	if (!glfwInit())
-	{
-		return EXIT_FAILURE;
-	}
-
 	// Set all the required options for GLFW
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -65,36 +54,10 @@ int main()
 #ifdef DEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
+}
 
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Invaders", nullptr, nullptr);
-
-	if (window == nullptr)
-	{
-		std::cerr << "Error creating OpenGL window.";
-
-		glfwTerminate();
-		return EXIT_FAILURE;
-	}
-
-	// Get frame buffer size
-	int window_width{ 0 };
-	int window_height{ 0 };
-
-	glfwGetFramebufferSize(window, &window_width, &window_height);
-
-	glfwMakeContextCurrent(window);
-
-	glfwSwapInterval(1);
-
-	// GLEW requires a current context, so we initialize it here
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
-	{
-		std::cerr << "Error initializing GLEW.";
-
-		return EXIT_FAILURE;
-	}
-
+static inline void setup_debug_callback()
+{
 	// If successfuly in debug, register callback and init
 	int gl_context_flags{};
 	glGetIntegerv(GL_CONTEXT_FLAGS, &gl_context_flags);
@@ -113,16 +76,72 @@ int main()
 		}
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	}
+}
 
+// Setup OpenGL window, context, error handling, etc.
+static GLFWwindow* opengl_setup(int in_window_width, int in_window_height,
+	int& out_window_width, int& out_window_height,
+	const std::string& window_name)
+{
+	glfwSetErrorCallback(error_callback);
+
+	if (!glfwInit())
+	{
+		throw std::runtime_error("GLFW failed to initialize.");
+	}
+
+	set_window_properties();
+
+	GLFWwindow* window = glfwCreateWindow(in_window_width, in_window_height,
+		window_name.c_str(), nullptr, nullptr);
+
+	if (window == nullptr)
+	{
+		glfwTerminate();
+		throw std::runtime_error("Failed to create GLFW window.");
+	}
+
+	// Get frame buffer size
+	glfwGetFramebufferSize(window, &out_window_width, &out_window_height);
+
+	glfwMakeContextCurrent(window);
+
+	glfwSwapInterval(1);
+
+	// GLEW requires a current context, so we initialize it here
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK)
+	{
+		throw std::runtime_error("Failed to initialize GLEW.");
+	}
+
+	setup_debug_callback();
+
+	//Display OpenGL version
 	std::cout << glGetString(GL_VERSION) << '\n';
 
 	// Set up the viewport
-	glViewport(0, 0, window_width, window_height);
+	glViewport(0, 0, out_window_width, out_window_height);
 
 	// Set the blending function
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	
+
+
+	return window;
+}
+
+int main()
+{
+	// Window size
+	const GLint WIDTH{ 800 };
+	const GLint HEIGHT{ 600 };
+	int window_width{ 0 };
+	int window_height{ 0 };
+
+	GLFWwindow* window = opengl_setup(WIDTH, HEIGHT,
+		window_width, window_height, "Space Invaders");
+
 	Renderer renderer{};
 
 	Battlefield battlefield{ static_cast<float>(window_width), static_cast<float>(window_height) };
