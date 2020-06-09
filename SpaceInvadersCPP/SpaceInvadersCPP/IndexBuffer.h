@@ -1,6 +1,5 @@
 #pragma once
 
-// GLEW: for loading OpenGL functions newer than OpenGL 1.1
 #define GLEW_STATIC
 #include <GL/glew.h>
 

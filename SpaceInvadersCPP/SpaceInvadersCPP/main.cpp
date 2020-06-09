@@ -10,6 +10,7 @@
 #include "IndexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
+#include "Shader.h"
 
 #include "RenderedObject.h"
 
@@ -213,25 +214,13 @@ int main()
 
 	va.unbind();
 
-	std::string vertex_shader{ load_shader("basic_v.shader") };
-	std::string fragment_shader{ load_shader("basic_f.shader") };
+	Shader shader("basic_v.shader", "basic_f.shader");
+	shader.bind();
 
-	unsigned int shader{};
-	try
-	{
-		shader = create_shader(vertex_shader, fragment_shader);
-	}
-	catch (std::runtime_error& e)
-	{
-		std::cerr << e.what();
-		glfwTerminate();
-		return EXIT_FAILURE;
-	}
+	std::array<float, 4> color{ 1.0f, 0.2f, 0.2f, 1.0f };
+	shader.set_uniform_4f("u_color", color);
 
-	glUseProgram(shader);
-	int location{ glGetUniformLocation(shader, "u_color") };
-	assert(location != -1 && "Uniform not found in shader.");
-	glUniform4f(location, 1.0f, 0.2f, 0.2f, 1.0f);
+	shader.unbind();
 
 	// Unbind everything
 	glBindVertexArray(0);
@@ -257,13 +246,16 @@ int main()
 			increment = 0.01f;
 		}
 		r += increment;
+		color[0] = r;
 
-		glUseProgram(shader);
-		glUniform4f(location, r, 0.2f, 0.2f, 1.0f);
+		shader.bind();
+		shader.set_uniform_4f("u_color", color);
+
 		va.bind();
 		iBuffer.bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		va.unbind();
+		shader.unbind();
 
 
 
