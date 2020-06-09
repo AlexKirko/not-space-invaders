@@ -9,6 +9,7 @@
 #include "Renderer.h"
 
 #include "RenderedObject.h"
+#include "Battlefield.h"
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -122,58 +123,28 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	
-
-	Texture texture{ "res/textures/cpp_logo_200.png" };
-	texture.bind();
-	auto ro_tex = std::make_shared<std::vector<Texture>>();
-	ro_tex->push_back(texture);
-	texture.unbind();
-
-	// Create a sample RenderedObject
-	RenderedObject rObj(
-		std::array<float, 2>{100.0, 50.0},
-		50, 50,
-		true, true,
-		0.0,
-		std::array<float, 2>{0.0, 0.0},
-		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
-		ro_tex
-	);
-	rObj.set_current_texture(0);
-
-	// Make an array of objects by copying
-	std::vector<RenderedObject> rObj_v{};
-	for (int i{ 0 }; i < 10; ++i)
-	{
-		for (int k{ 0 }; k < 5; ++k)
-		{
-			RenderedObject rObj_push(rObj);
-			rObj_push.move_to(std::array<float, 2>{
-				rObj.get_bottomleft()[0] + i * 60,
-				rObj.get_bottomleft()[0] + k * 60,
-			});
-			rObj_v.push_back(rObj_push);
-		}
-	}
-
 	Renderer renderer{};
 
-	for (auto rObject : rObj_v)
-	{
-		renderer.init_render(rObject, WIDTH, HEIGHT);
-	}
-
+	Battlefield battlefield{ static_cast<float>(window_width), static_cast<float>(window_height) };
 	// Start the main loop
+	double last_loop_time{ glfwGetTime() };
+	double last_move_time{ glfwGetTime() };
+	float time_elapsed{};
 	while (!glfwWindowShouldClose(window))
 	{
 		// Render
 		renderer.clear(std::array<float, 4> {0.0f, 0.0f, 0.0f, 1.0f});
 
-		for (auto rObject : rObj_v)
-		{
-			renderer.render(rObject, WIDTH, HEIGHT);
-		}
+		last_loop_time = glfwGetTime();
 
+		battlefield.spawn_alien_row(21, 10.0);
+		if (glfwGetTime() - last_move_time > 0.05)
+		{
+			time_elapsed = static_cast<float>(glfwGetTime() - last_move_time);
+			last_move_time = glfwGetTime();
+			battlefield.move_objects(time_elapsed);
+		}
+		battlefield.render_objects();
 
 		// Show rendered window
 		glfwSwapBuffers(window);

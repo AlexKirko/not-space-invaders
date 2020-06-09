@@ -9,7 +9,7 @@ RenderedObject::RenderedObject(
 	float angle,
 	const std::array<float, 2>& velocity,
 	const std::array<float, 4>& color,
-	std::shared_ptr<std::vector<Texture>> textures) :
+	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures) :
 	m_bottomleft{bottomleft}, m_angle{angle},
 	m_width{width}, m_height{height},
 	m_movable{movable}, m_use_textures{use_textures},
@@ -23,7 +23,7 @@ RenderedObject::RenderedObject(
 		" velocity on an unmovable object.");
 	}
 	if (!use_textures &&
-		textures != std::shared_ptr<std::vector<Texture>>{})
+		textures != std::shared_ptr<std::vector<std::unique_ptr<Texture>>>{})
 	{
 		throw std::runtime_error("Attempted to set textures"
 			" velocity on an object that doesn't use textures.");
@@ -73,7 +73,7 @@ void RenderedObject::set_velocity(const std::array<float, 2>& velocity)
 	m_velocity = velocity;
 }
 
-void RenderedObject::set_textures(std::shared_ptr<std::vector<Texture>> textures)
+void RenderedObject::set_textures(std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures)
 {
 	// Textures are created by switching to a new game state
 	// objects share textures to avoid duplication
@@ -98,5 +98,13 @@ const Texture& RenderedObject::get_current_texture() const
 		throw std::runtime_error("Current texture not set"
 			" or not in use.");
 	}
-	return (*m_textures)[m_current_texture];
+	return *(*m_textures)[m_current_texture];
+}
+
+void RenderedObject::gradient_move(float time_elapsed)
+{
+	move_to(std::array<float, 2> {
+		m_bottomleft[0] + m_velocity[0] * time_elapsed,
+			m_bottomleft[1] + m_velocity[1] * time_elapsed
+	});
 }

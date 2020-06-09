@@ -87,7 +87,16 @@ void Renderer::init_render(const RenderedObject& rObj,
 	auto rData_ptr = std::make_unique<RenderData>(va_ptr, vb_ptr, ib_ptr, shader_ptr);
 	std::pair<int, std::unique_ptr<RenderData>> to_insert =
 		std::make_pair( rObj.get_uid(), std::move(rData_ptr) );
-	m_cached_rdata.insert(std::move(to_insert));
+
+	auto pos = m_cached_rdata.find(rObj.get_uid());
+	if (pos == m_cached_rdata.end())
+	{
+		m_cached_rdata.insert(std::move(to_insert));
+	}
+	else
+	{
+		pos->second = std::move(to_insert.second);
+	}
 }
 
 // Always init_render before render just in case the program

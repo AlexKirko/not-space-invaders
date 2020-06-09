@@ -24,7 +24,7 @@ private:
 	std::array<float, 4> m_color;
 
 	int m_current_texture;
-	std::shared_ptr<std::vector<Texture>> m_textures;
+	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_textures;
 
 	static int rObj_count;
 public:
@@ -36,14 +36,15 @@ public:
 		float angle=0.0,
 		const std::array<float, 2>& velocity = std::array<float, 2>{0.0, 0.0},
 		const std::array<float, 4>& color = std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
-		std::shared_ptr<std::vector<Texture>> textures = std::shared_ptr<std::vector<Texture>>{nullptr});
+		std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures =
+		std::shared_ptr<std::vector<std::unique_ptr<Texture>>>{nullptr});
 
 	RenderedObject(const RenderedObject& other);
 
 	void move_to(const std::array<float, 2>& bottomleft);
 	void set_velocity(const std::array<float, 2>& velocity);
 
-	void set_textures(std::shared_ptr<std::vector<Texture>> textures);
+	void set_textures(std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures);
 
 	void set_current_texture(int current_texture);
 	const Texture& get_current_texture() const;
@@ -62,4 +63,6 @@ public:
 	const std::array<float, 4>& get_color() const { return m_color; }
 
 	const std::array<float, 2>& get_bottomleft() const { return m_bottomleft; }
+
+	void gradient_move(float time_elapsed);
 };
