@@ -6,6 +6,9 @@
 
 #include "opengl_debug_output.h"
 
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+
 #include "RenderedObject.h"
 
 // GLEW: for loading OpenGL functions newer than OpenGL 1.1
@@ -200,18 +203,14 @@ int main()
 	glGenVertexArrays(1, &varray);
 	glBindVertexArray(varray);
 
+	VertexBuffer vBuffer{positions, 2 * 4 * sizeof(float) };
+
 	unsigned int buffer{};
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 2 * 4 * sizeof(float), positions, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 
-	unsigned int ind_buffer{};
-	glGenBuffers(1, &ind_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	IndexBuffer iBuffer{ indices, 2 * 3 };
 
 	glBindVertexArray(0);
 
@@ -263,7 +262,7 @@ int main()
 		glUseProgram(shader);
 		glUniform4f(location, r, 0.2f, 0.2f, 1.0f);
 		glBindVertexArray(varray);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buffer);
+		iBuffer.bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 

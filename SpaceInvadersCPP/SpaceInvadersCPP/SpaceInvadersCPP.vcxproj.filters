@@ -22,6 +22,12 @@
     <Filter Include="Source Files\opengl_utility">
       <UniqueIdentifier>{b6b025be-ddfe-42d3-bd82-d71bb42a0440}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendering">
+      <UniqueIdentifier>{8ca4968d-fb15-4505-9096-9788dbcd551b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendering">
+      <UniqueIdentifier>{e6925d7d-6aee-402e-93e1-db0a7123dc1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,6 +39,12 @@
     <ClCompile Include="opengl_debug_output.cpp">
       <Filter>Source Files\opengl_utility</Filter>
     </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderedObject.h">
@@ -40,6 +52,12 @@
     </ClInclude>
     <ClInclude Include="opengl_debug_output.h">
       <Filter>Header Files\opengl_utility</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files\rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
