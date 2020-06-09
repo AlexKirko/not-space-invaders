@@ -36,10 +36,11 @@ void Battlefield::create_player()
 		true, true,
 		0.0,
 		std::array<float, 2>{0.0f, 0.0f},
-		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
+		std::array<float, 4>{1.0f, 1.0f, 1.0f, 1.0f},
 		m_player_textures,
 		3,
-		m_player_speed
+		m_player_speed,
+		50.0f, 50.0f
 		);
 	player_ptr->set_current_texture(0);
 	player_ptr->register_renderer(m_renderer);
@@ -55,6 +56,87 @@ void Battlefield::player_shoots()
 	}
 }
 
+void Battlefield::check_hits()
+{
+	check_alien_hits();
+	check_player_hits();
+}
+
+void Battlefield::check_player_hits()
+{
+	// For every player bullet,
+	// check if it has impacted any of the aliens
+	for (auto& pl_bullet : m_player_bullets)
+	{
+		// We clean up before rendering
+		// so we need to check for an empty pointer here
+		for (auto& alien : m_aliens)
+		{
+			if (pl_bullet != nullptr && alien != nullptr)
+			{
+				bool hit{
+					alien->get_hitbox().check_hit(
+						std::array<float, 2> {
+							pl_bullet->get_bottomleft()[0] + pl_bullet->get_width() / 2.0f,
+							pl_bullet->get_bottomleft()[1] + pl_bullet->get_height() / 2.0f
+						}
+					)
+				};
+				if (hit)
+				{
+					// Remove the bullet and the alien
+					pl_bullet.reset();
+					alien.reset();
+					// TODO : add to score
+				}
+			}
+		}
+	}
+}
+
+void Battlefield::check_alien_hits()
+{
+	// For every alien bullet
+	// check if it impacted the player
+	for (auto& al_bullet : m_alien_bullets)
+	{
+		if (al_bullet != nullptr)
+		{
+			bool hit{
+				m_player->get_hitbox().check_hit(
+					std::array<float, 2> {
+						al_bullet->get_bottomleft()[0] + al_bullet->get_width() / 2.0f,
+						al_bullet->get_bottomleft()[1] + al_bullet->get_height() / 2.0f
+					}
+				)
+			};
+			if (hit)
+			{
+				// Remove the bullet and decrease health
+				al_bullet.reset();
+				m_player->lose_life();
+			}
+		}
+	}
+
+	// Check if any of the aliens collided with the player
+	for (auto& alien : m_aliens)
+	{
+		if (alien != nullptr)
+		{
+			bool hit{
+				m_player->get_hitbox().check_hit(alien->get_hitbox())
+			};
+			if (hit)
+			{
+				// Remove the bullet and decrease health
+				alien.reset();
+				m_player->lose_life();
+			}
+		}
+	}
+}
+
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
 {
 	auto alien_ptr = std::make_unique<Alien>(
@@ -64,7 +146,9 @@ void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
 		0.0,
 		std::array<float, 2>{0.0f, -m_alien_speed},
 		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
-		m_alien_textures
+		m_alien_textures,
+		// Alien hitbox size
+		40.0, 40.0
 	);
 	alien_ptr->set_current_texture(0);
 	alien_ptr->register_renderer(m_renderer);
@@ -123,11 +207,18 @@ void Battlefield::render_objects()
 {
 	// Render everything on the battlefield
 	// Be mindful of priority (front objects rendering last)
-
+	/*
 	render_player();
 	render_aliens();
 	render_alien_bullets();
 	render_player_bullets();
+	*/
+
+	render(m_player);
+	render(m_aliens);
+	render(m_alien_bullets);
+	render(m_player_bullets);
+
 }
 
 void Battlefield::move_aliens(float time_elapsed)
@@ -153,17 +244,6 @@ void Battlefield::move_alien_bullets(float time_elapsed)
 			cleanup = true;
 		}
 	}
-	if (cleanup)
-	{
-		m_alien_bullets.erase(std::remove_if(
-			m_alien_bullets.begin(), 
-			m_alien_bullets.end(),
-			[](std::unique_ptr<AlienBullet>& alien_bullet)
-			{
-				return alien_bullet == nullptr;
-			}
-			));
-	}
 }
 
 void Battlefield::move_player_bullets(float time_elapsed)
@@ -180,17 +260,6 @@ void Battlefield::move_player_bullets(float time_elapsed)
 			player_bullet.reset();
 			cleanup = true;
 		}
-	}
-	if (cleanup)
-	{
-		m_player_bullets.erase(std::remove_if(
-			m_player_bullets.begin(),
-			m_player_bullets.end(),
-			[](std::unique_ptr<PlayerBullet>& player_bullet)
-			{
-				return player_bullet == nullptr;
-			}
-		));
 	}
 }
 
@@ -225,36 +294,33 @@ void Battlefield::move_player(float time_elapsed)
 }
 
 
-void Battlefield::render_aliens()
+template<typename rObjType>
+void Battlefield::render(std::unique_ptr<rObjType>& r_object)
 {
-	for (auto& alien : m_aliens)
+	m_renderer->init_render(*r_object, m_window_width, m_window_height);
+	m_renderer->render(*r_object, m_window_width, m_window_height);
+}
+
+
+template<typename rObjType>
+void Battlefield::render(std::vector<std::unique_ptr<rObjType>>& r_objects)
+{
+	// Clean up empty pointers before rendering
+	if (!r_objects.empty())
 	{
-		m_renderer->init_render(*alien, m_window_width, m_window_height);
-		m_renderer->render(*alien, m_window_width, m_window_height);
+		r_objects.erase(std::remove_if(
+			r_objects.begin(),
+			r_objects.end(),
+			[](std::unique_ptr<rObjType>& r_object)
+			{
+				return r_object == nullptr;
+			}
+		),
+		r_objects.end());
+	}
+	
+	for (auto& r_object : r_objects)
+	{
+		render(r_object);
 	}
 }
-
-void Battlefield::render_alien_bullets()
-{
-	for (auto& alien_bullet : m_alien_bullets)
-	{
-		m_renderer->init_render(*alien_bullet, m_window_width, m_window_height);
-		m_renderer->render(*alien_bullet, m_window_width, m_window_height);
-	}
-}
-
-void Battlefield::render_player()
-{
-	m_renderer->init_render(*m_player, m_window_width, m_window_height);
-	m_renderer->render(*m_player, m_window_width, m_window_height);
-}
-
-void Battlefield::render_player_bullets()
-{
-	for (auto& player_bullet : m_player_bullets)
-	{
-		m_renderer->init_render(*player_bullet, m_window_width, m_window_height);
-		m_renderer->render(*player_bullet, m_window_width, m_window_height);
-	}
-}
-

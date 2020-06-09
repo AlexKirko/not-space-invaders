@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
     <ClCompile Include="Battlefield.cpp" />
+    <ClCompile Include="Hitbox.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Alien.h" />
     <ClInclude Include="AlienBullet.h" />
     <ClInclude Include="Battlefield.h" />
+    <ClInclude Include="Hitbox.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="opengl_debug_output.h" />
     <ClInclude Include="Player.h" />

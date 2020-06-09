@@ -39,6 +39,11 @@ private:
 	void render_alien_bullets();
 	void render_player();
 	void render_player_bullets();
+
+	template<typename rObjType>
+	void render(std::unique_ptr<rObjType>& r_object);
+	template<typename rObjType>
+	void render(std::vector<std::unique_ptr<rObjType>> &r_objects);
 public:
 	Battlefield(float window_width, float window_height);
 
@@ -51,6 +56,10 @@ public:
 
 	void create_player();
 	void player_shoots();
+
+	void check_hits();
+	void check_player_hits();
+	void check_alien_hits();
 
 	void move_objects(float time_elapsed);
 	void render_objects();

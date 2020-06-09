@@ -57,3 +57,15 @@ std::unique_ptr<AlienBullet> Alien::maybe_shoot(float time_elapsed,
 		return nullptr;
 	}
 }
+
+void Alien::move_to(const std::array<float, 2>& bottomleft)
+{
+	RenderedObject::move_to(bottomleft);
+	m_hitbox.move_to_r_object(*this);
+}
+
+void Alien::gradient_move(float time_elapsed)
+{
+	RenderedObject::gradient_move(time_elapsed);
+	m_hitbox.move_to_r_object(*this);
+}

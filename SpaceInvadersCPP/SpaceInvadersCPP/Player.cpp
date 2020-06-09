@@ -79,3 +79,15 @@ std::unique_ptr<PlayerBullet> Player::try_shoot()
 	}
 	return nullptr;
 }
+
+void Player::move_to(const std::array<float, 2>& bottomleft)
+{
+	RenderedObject::move_to(bottomleft);
+	m_hitbox.move_to_r_object(*this);
+}
+
+void Player::gradient_move(float time_elapsed)
+{
+	RenderedObject::gradient_move(time_elapsed);
+	m_hitbox.move_to_r_object(*this);
+}

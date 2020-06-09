@@ -206,6 +206,9 @@ int main()
 		battlefield.player_shoots();
 
 		battlefield.move_objects(time_elapsed);
+
+		battlefield.check_hits();
+
 		battlefield.render_objects();
 
 		// Show rendered window

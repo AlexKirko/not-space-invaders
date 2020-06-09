@@ -2,6 +2,7 @@
 
 #include "AlienBullet.h"
 #include "RenderedObject.h"
+#include "Hitbox.h"
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -22,6 +23,8 @@ private:
 	static std::uniform_int_distribution<int> rng;
 
 	int m_hp;
+
+	Hitbox m_hitbox;
 public:
 	Alien(const std::array<float, 2>& bottomleft,
 		int width, int height,
@@ -29,7 +32,8 @@ public:
 		float angle,
 		const std::array<float, 2>& velocity,
 		const std::array<float, 4>& color,
-		std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures) :
+		std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures,
+		float hitbox_width, float hitbox_height) :
 			RenderedObject{ bottomleft,
 				width, height,
 				movable, use_textures,
@@ -37,8 +41,11 @@ public:
 				velocity,
 				color,
 				textures },
-			m_hp{ 0 }
-	{}
+			m_hp{ 1 },
+		m_hitbox{ hitbox_width, hitbox_height}
+	{ 
+		m_hitbox.move_to_r_object(*this);
+	}
 
 	std::unique_ptr<AlienBullet> maybe_shoot(float time_elapsed,
 		float window_width,
@@ -47,4 +54,9 @@ public:
 
 	void decrease_hp(int damage) { m_hp -= damage; }
 	const int get_hp() const { return m_hp; }
+	const Hitbox& get_hitbox() const { return m_hitbox; }
+
+	// Consider making virtual if necessity rises
+	void move_to(const std::array<float, 2>& bottomleft);
+	void gradient_move(float time_elapsed);
 };
