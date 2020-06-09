@@ -197,8 +197,10 @@ int main()
 	glUseProgram(shader);
 	int location{ glGetUniformLocation(shader, "u_color") };
 	assert(location != -1 && "Uniform not found in shader.");
-	glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
+	glUniform4f(location, 1.0f, 0.2f, 0.2f, 1.0f);
 
+	float r { 1.0f };
+	float increment{ -0.01f };
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -206,9 +208,22 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		if (r >= 1.0f)
+		{
+			increment = -0.01f;
+		}
+		else if (r <= 0.0f)
+		{
+			increment = 0.01f;
+		}
+		r += increment;
+
 		glBindVertexArray(varray);
+		glUniform4f(location, r, 0.2f, 0.2f, 1.0f);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
+
+
 
 		// Show rendered window
 		glfwSwapBuffers(window);
