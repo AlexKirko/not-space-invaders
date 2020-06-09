@@ -135,16 +135,31 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	Battlefield* battlefield = static_cast<Battlefield*>(glfwGetWindowUserPointer(window));
 
+	// Player movement
+	bool movement{ false };
 	MoveTypes player_move{ MoveTypes::STILL };
 	if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
 	{
+		movement = true;
 		player_move = MoveTypes::RIGHT;
 	}
 	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
 	{
+		movement = true;
 		player_move = MoveTypes::LEFT;
 	}
-	battlefield->get_player()->movement(player_move, battlefield->get_player_speed());
+	else if ((key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT) && action == GLFW_RELEASE)
+	{
+		movement = true;
+	}
+	if (movement)
+		battlefield->get_player()->movement(player_move, battlefield->get_player_speed());
+
+	// Player shooting
+	if (key == GLFW_KEY_Z && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		battlefield->get_player()->push_bullets(1.5f, 200.0f);
+	}
 }
 
 int main()
@@ -186,6 +201,8 @@ int main()
 
 		// Ticking actions
 		battlefield.aliens_shoot(time_elapsed);
+
+		battlefield.get_player()->tick_time(time_elapsed);
 
 		battlefield.move_objects(time_elapsed);
 		battlefield.render_objects();

@@ -167,6 +167,7 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="opengl_debug_output.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="RenderedObject.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
