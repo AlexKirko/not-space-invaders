@@ -10,7 +10,8 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_aliens{}, m_alien_bullets{},
 	m_player{},
 	m_renderer{ std::make_shared<Renderer>() },
-	m_bottom_padding{ 50.0f }
+	m_bottom_padding{ 50.0f },
+	m_sides_padding{ 100.0f }
 {
 	// Load test texture.
 	auto al_texture1 = std::make_unique<Texture>("res/textures/cpp_logo_200.png");
@@ -157,6 +158,31 @@ void Battlefield::move_alien_bullets(float time_elapsed)
 void Battlefield::move_player(float time_elapsed)
 {
 	m_player->gradient_move(time_elapsed);
+	// Check that we didn't move the player beyond the battlefield
+	// If so, move back and set speed to 0
+	bool out_of_field{ false };
+	if (m_player->get_bottomleft()[0] < m_sides_padding)
+	{
+		out_of_field = true;
+		m_player->move_to(std::array<float, 2>{
+			m_sides_padding,
+			m_player->get_bottomleft()[1]
+		});
+	}
+	else if (m_player->get_bottomleft()[0] + m_player->get_width() > 
+		m_window_width - m_sides_padding)
+	{
+		out_of_field = true;
+		m_player->move_to(std::array<float, 2>{
+			m_window_width - m_sides_padding - m_player->get_width(),
+			m_player->get_bottomleft()[1]
+		});
+	}
+
+	if (out_of_field)
+	{
+		m_player->movement(MoveTypes::STILL, m_player_speed);
+	}
 }
 
 

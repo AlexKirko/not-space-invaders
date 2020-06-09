@@ -21,6 +21,7 @@ private:
 	float m_alien_speed;
 	float m_player_speed;
 	float m_bottom_padding;
+	float m_sides_padding;
 	std::shared_ptr<Renderer> m_renderer;
 	std::vector<std::unique_ptr<Alien>> m_aliens;
 	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
