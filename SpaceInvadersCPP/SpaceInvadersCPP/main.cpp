@@ -132,6 +132,8 @@ int main()
 
 	glfwMakeContextCurrent(window);
 
+	glfwSwapInterval(1);
+
 	// GLEW requires a current context, so we initialize it here
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
