@@ -199,10 +199,10 @@ int main()
 	glEnable(GL_BLEND);
 	
 	float positions[] = {
-		-0.5, -0.5, 0.0, 0.0,
-		 0.5, -0.5, 1.0, 0.0,
-		 0.5,  0.5, 1.0, 1.0,
-		-0.5,  0.5, 0.0, 1.0
+		200.0, 100.0, 0.0, 0.0,
+		600.0, 100.0, 1.0, 0.0,
+		600.0, 500.0, 1.0, 1.0,
+		200.0, 500.0, 0.0, 1.0
 	};
 
 	unsigned int indices[] = {
@@ -232,7 +232,9 @@ int main()
 	texture.bind();
 	shader.set_uniform_1i("u_texture", 0);
 
-	glm::mat4 projection = glm::ortho(-2.0, 2.0, -1.5, 1.5);
+	// Fix the image aspect ratio via linear transformation (orthonormal projection)
+	glm::mat4 projection = glm::ortho(0.0, static_cast<double>(WIDTH),
+		0.0, static_cast<double>(HEIGHT));
 	shader.set_uniform_mat4("u_mvp", projection);
 
 	// Unbind everything
