@@ -51,12 +51,12 @@ void Renderer::init_render(const RenderedObject& rObj,
 	auto shader_ptr = std::make_unique<Shader>();
 	if (rObj.get_use_textures())
 	{
-		shader_ptr->reset_shaders("texture_v.shader", "texture_f.shader");
+		shader_ptr->reset_shaders("res/shaders/texture_v.shader", "res/shaders/texture_f.shader");
 		shader_ptr->bind();
 	}
 	else
 	{
-		shader_ptr->reset_shaders("basic_v.shader", "basic_f.shader");
+		shader_ptr->reset_shaders("res/shaders/basic_v.shader", "res/shaders/basic_f.shader");
 		shader_ptr->bind();
 	}
 

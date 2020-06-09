@@ -109,22 +109,20 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="basic_v.shader">
+    <CopyFileToFolders Include="res\shaders\basic_f.shader">
       <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="basic_f.shader">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\shaders\basic_v.shader">
       <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="texture_f.shader">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\shaders\texture_f.shader">
       <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="texture_v.shader">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\shaders\texture_v.shader">
       <Filter>Resource Files\shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="cpp_logo_200.png">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="res\textures\cpp_logo_200.png">
       <Filter>Resource Files\textures</Filter>
-    </Image>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

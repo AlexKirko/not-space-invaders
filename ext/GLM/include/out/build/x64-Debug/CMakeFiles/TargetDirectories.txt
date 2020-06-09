@@ -1,0 +1,2 @@
+D:/cpp_projs/space_invaders/ext/GLM/include/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+D:/cpp_projs/space_invaders/ext/GLM/include/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

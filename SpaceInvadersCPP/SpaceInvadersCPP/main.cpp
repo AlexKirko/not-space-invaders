@@ -123,7 +123,7 @@ int main()
 	glEnable(GL_BLEND);
 	
 
-	Texture texture{ "cpp_logo_200.png" };
+	Texture texture{ "res/textures/cpp_logo_200.png" };
 	texture.bind();
 	auto ro_tex = std::make_shared<std::vector<Texture>>();
 	ro_tex->push_back(texture);
