@@ -161,6 +161,10 @@ int main()
 		{
 			time_elapsed = static_cast<float>(glfwGetTime() - last_move_time);
 			last_move_time = glfwGetTime();
+
+			// Ticking actions
+			battlefield.aliens_shoot(time_elapsed);
+
 			battlefield.move_objects(time_elapsed);
 		}
 		battlefield.render_objects();

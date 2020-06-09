@@ -4,6 +4,7 @@
 #include "Renderer.h"
 
 #include "Alien.h"
+#include "AlienBullet.h"
 #include "RenderedObject.h"
 
 #include <memory>
@@ -18,17 +19,21 @@ private:
 	float m_alien_speed;
 	Renderer m_renderer;
 	std::vector<std::unique_ptr<Alien>> m_aliens;
+	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_alien_textures;
 
 	void move_aliens(float time_elapsed);
+	void move_alien_bullets(float time_elapsed);
 	void render_aliens();
+	void render_alien_bullets();
 public:
 	Battlefield(float window_width, float window_height);
 
 	void spawn_alien(std::array<float, 2> bottom_left);
 	void spawn_alien_row(int min_aliens, float padding);
 
-	void move_objects(float time_elapsed);
+	void aliens_shoot(float time_elapsed);
 
+	void move_objects(float time_elapsed);
 	void render_objects();
 };

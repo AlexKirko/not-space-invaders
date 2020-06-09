@@ -3,7 +3,7 @@
 Battlefield::Battlefield(float window_width, float window_height) : 
 	m_alien_speed{1.0f},
 	m_window_width{window_width}, m_window_height{window_height},
-	m_renderer{}, m_alien_textures{}
+	m_renderer{}, m_alien_textures{}, m_aliens{}, m_alien_bullets{}
 {
 	m_alien_textures = std::make_shared<std::vector<std::unique_ptr<Texture>>>();
 
@@ -53,10 +53,23 @@ void Battlefield::spawn_alien_row(int min_aliens, float padding)
 	}
 }
 
+void Battlefield::aliens_shoot(float time_elapsed)
+{
+	for (auto& alien_ptr : m_aliens)
+	{
+		std::unique_ptr<AlienBullet> alien_bull_ptr{
+			alien_ptr->maybe_shoot(time_elapsed, m_window_width)};
+
+		if (alien_bull_ptr)
+			m_alien_bullets.push_back(std::move(alien_bull_ptr));
+	}
+}
+
 void Battlefield::move_objects(float time_elapsed)
 {
 	// Move all movable objects according to velocity
 	move_aliens(time_elapsed);
+	move_alien_bullets(time_elapsed);
 }
 
 void Battlefield::render_objects()
@@ -65,13 +78,22 @@ void Battlefield::render_objects()
 	// Be mindful of priority (front objects rendering last)
 
 	render_aliens();
+	render_alien_bullets();
 }
 
 void Battlefield::move_aliens(float time_elapsed)
 {
-	for (auto& alien_ptr : m_aliens)
+	for (auto& alien : m_aliens)
 	{
-		alien_ptr->gradient_move(time_elapsed);
+		alien->gradient_move(time_elapsed);
+	}
+}
+
+void Battlefield::move_alien_bullets(float time_elapsed)
+{
+	for (auto& alien_bullet : m_alien_bullets)
+	{
+		alien_bullet->gradient_move(time_elapsed);
 	}
 }
 
@@ -83,3 +105,13 @@ void Battlefield::render_aliens()
 		m_renderer.render(*alien, m_window_width, m_window_height);
 	}
 }
+
+void Battlefield::render_alien_bullets()
+{
+	for (auto& alien_bullet : m_alien_bullets)
+	{
+		m_renderer.init_render(*alien_bullet, m_window_width, m_window_height);
+		m_renderer.render(*alien_bullet, m_window_width, m_window_height);
+	}
+}
+
