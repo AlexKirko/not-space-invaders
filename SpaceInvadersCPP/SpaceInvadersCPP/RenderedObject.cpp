@@ -1,19 +1,50 @@
 #include "RenderedObject.h"
 
-void RenderedObject::move_to(const std::array<double, 2>& center)
+
+RenderedObject::RenderedObject(
+	const std::array<float, 2>& bottomleft,
+	int width, int height,
+	bool movable, bool use_textures,
+	float angle,
+	const std::array<float, 2>& velocity,
+	const std::array<float, 4>& color,
+	std::shared_ptr<std::vector<Texture>> textures) :
+	m_bottomleft{bottomleft}, m_angle{angle},
+	m_width{width}, m_height{height},
+	m_movable{movable}, m_use_textures{use_textures},
+	m_color{color}, m_current_texture{-1}, m_velocity{0.0, 0.0},
+	m_textures{nullptr}
 {
-	// Move the shape to a new center
+	// Check for conflicts
+	if (!movable && velocity != std::array<float, 2>{0.0, 0.0})
+	{
+		throw std::runtime_error("Attempted to set non-zero"
+		" velocity on an unmovable object.");
+	}
+	if (!use_textures &&
+		textures != std::shared_ptr<std::vector<Texture>>{})
+	{
+		throw std::runtime_error("Attempted to set textures"
+			" velocity on an object that doesn't use textures.");
+	}
+	m_velocity = velocity;
+	m_textures = textures;
+}
+
+void RenderedObject::move_to(const std::array<float, 2>& bottomleft)
+{
+	// Move the shape to a new location
 	// Check if the object is movable
 	if (!m_movable)
 	{
 		throw std::runtime_error("Tried to move unmovable rendered object.");
 	}
 
-	// Move the object center
-	m_center = center;
+	// Move the object
+	m_bottomleft = bottomleft;
 }
 
-void RenderedObject::set_velocity(const std::array<double, 2>& velocity)
+void RenderedObject::set_velocity(const std::array<float, 2>& velocity)
 {
 	// Set new velocity
 	// Check if the object is movable
@@ -25,10 +56,30 @@ void RenderedObject::set_velocity(const std::array<double, 2>& velocity)
 	m_velocity = velocity;
 }
 
-void RenderedObject::set_cached_bitmap(const std::vector<unsigned char>& cached_bitmap)
+void RenderedObject::set_textures(std::shared_ptr<std::vector<Texture>> textures)
 {
-	// Cache a transformed bitmap to avoid recalculating the transform each loop
-	// When rendering, we check for a cached bitmap first
-	m_use_cached_bitmap = true;
-	m_cached_bitmap = std::make_unique<std::vector<unsigned char>>(cached_bitmap);
+	// Textures are created by switching to a new game state
+	// objects share textures to avoid duplication
+	m_use_textures = true;
+	auto m_textures = textures;
+}
+
+void RenderedObject::set_current_texture(int current_texture)
+{
+	if (!m_use_textures)
+	{
+		throw std::runtime_error("Can't set current texture on"
+			" a Rendered object that doesn't use textures.");
+	}
+	m_current_texture = current_texture;
+}
+
+const int RenderedObject::get_current_texture() const
+{
+	if (!m_use_textures)
+	{
+		throw std::runtime_error("Current texture not set"
+			" or not in use.");
+	}
+	return m_current_texture;
 }

@@ -1,40 +1,53 @@
 #pragma once
 
+#include "Texture.h"
+
 #include <array>
 #include <stdexcept>
 #include <vector>
 #include <memory>
+#include <string>
 
 // Implements functionality that all rendered objects should have
 class RenderedObject
 {
 private:
-	std::array<double, 2> m_center;
-	std::array<double, 2> m_velocity;
-	const bool m_movable;
-	int m_bitmap_ind;
-	double m_angle;
-	// Vector of shared pointers to bitmaps
-	// Bitmaps are vectors of unsigned char of length 3 * width * height
-	const std::vector<std::shared_ptr<std::vector<unsigned char>>> m_bitmaps;
-	// Bitmap width and height are included for ease of access
+	std::array<float, 2> m_bottomleft;
+	// Width and height are in pixels
 	const int m_width;
 	const int m_height;
-	// Cached bitmap
-	bool m_use_cached_bitmap;
-	std::unique_ptr<std::vector<unsigned char>> m_cached_bitmap;
+	const bool m_movable;
+	bool m_use_textures;
+	float m_angle;
+	std::array<float, 2> m_velocity;
+	std::array<float, 4> m_color;
+
+	int m_current_texture;
+	std::shared_ptr<std::vector<Texture>> m_textures;
 
 public:
-	void move_to(const std::array<double, 2>& center);
-	void set_velocity(const std::array<double, 2>& velocity);
+	RenderedObject(
+		const std::array<float, 2>& bottomleft,
+		int width, int height,
+		bool movable,
+		bool use_textures=false,
+		float angle=0.0,
+		const std::array<float, 2>& velocity = std::array<float, 2>{0.0, 0.0},
+		const std::array<float, 4>& color = std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
+		std::shared_ptr<std::vector<Texture>> textures = std::shared_ptr<std::vector<Texture>>{nullptr});
 
-	void set_cached_bitmap(const std::vector<unsigned char>& cached_bitmap);
+	void move_to(const std::array<float, 2>& bottomleft);
+	void set_velocity(const std::array<float, 2>& velocity);
 
-	void set_bitmap_ind(int bitmap_ind) { m_bitmap_ind = bitmap_ind; }
-	const int get_bitmap_ind() const { return m_bitmap_ind; }
+	void set_textures(std::shared_ptr<std::vector<Texture>> textures);
 
-	void set_angle(double angle) { m_angle = angle;	}
-	const double get_angle() const { return m_angle; }
+	void set_current_texture(int bitmap_ind);
+	const int get_current_texture() const;
 
-	const std::array<double, 2>& get_center() const { return m_center; }
+	const bool get_use_textures() const { return m_use_textures; }
+
+	void set_angle(float angle) { m_angle = angle;	}
+	const float get_angle() const { return m_angle; }
+
+	const std::array<float, 2>& get_bottomleft() const { return m_bottomleft; }
 };

@@ -243,28 +243,14 @@ int main()
 	iBuffer.unbind();
 	texture.unbind();
 
-	/*float r { 1.0f };
-	float increment{ -0.01f };*/
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Render
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		/*if (r >= 1.0f)
-		{
-			increment = -0.01f;
-		}
-		else if (r <= 0.0f)
-		{
-			increment = 0.01f;
-		}
-		r += increment;
-		color[0] = r;*/
-		
 		shader.bind();
-		//shader.set_uniform_4f("u_color", color);
 
 		va.bind();
 		iBuffer.bind();
@@ -272,8 +258,6 @@ int main()
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		va.unbind();
 		shader.unbind();
-
-
 
 		// Show rendered window
 		glfwSwapBuffers(window);
