@@ -129,7 +129,7 @@ void Battlefield::move_aliens(float time_elapsed)
 
 void Battlefield::move_alien_bullets(float time_elapsed)
 {
-	bool cleanup = false;
+	bool cleanup{ false };
 	for (auto& alien_bullet : m_alien_bullets)
 	{
 		alien_bullet->gradient_move(time_elapsed);
