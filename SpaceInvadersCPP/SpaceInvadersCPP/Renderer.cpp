@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "RenderedObject.h"
+
 Renderer::Renderer() : m_cached_rdata{}
 {
 }
@@ -151,4 +153,11 @@ void Renderer::clear(const std::array<float, 4>& bckgrnd_color)
 	glClearColor(bckgrnd_color[0], bckgrnd_color[1],
 		bckgrnd_color[2], bckgrnd_color[3]);
 	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Renderer::remove_from_cache(int rObj_uid)
+{
+	auto pos = m_cached_rdata.find(rObj_uid);
+	if (pos != m_cached_rdata.end())
+		m_cached_rdata.erase(pos);
 }

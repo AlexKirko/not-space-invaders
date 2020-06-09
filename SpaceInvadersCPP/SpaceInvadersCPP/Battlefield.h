@@ -17,7 +17,7 @@ private:
 	float m_window_width;
 	float m_window_height;
 	float m_alien_speed;
-	Renderer m_renderer;
+	std::shared_ptr<Renderer> m_renderer;
 	std::vector<std::unique_ptr<Alien>> m_aliens;
 	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_alien_textures;

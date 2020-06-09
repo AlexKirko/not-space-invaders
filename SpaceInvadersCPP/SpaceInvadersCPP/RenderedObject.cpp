@@ -1,5 +1,7 @@
 #include "RenderedObject.h"
 
+#include "Renderer.h"
+
 int RenderedObject::rObj_count{ 0 };
 
 RenderedObject::RenderedObject(
@@ -47,6 +49,13 @@ RenderedObject::RenderedObject(const RenderedObject& other) :
 	m_uid = rObj_count;
 	++rObj_count;
 }
+
+RenderedObject::~RenderedObject()
+{
+	if (m_renderer)
+		m_renderer->remove_from_cache(m_uid);
+}
+
 
 void RenderedObject::move_to(const std::array<float, 2>& bottomleft)
 {

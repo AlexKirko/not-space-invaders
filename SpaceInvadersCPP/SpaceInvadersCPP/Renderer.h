@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RenderedObject.h"
-
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexBufferLayout.h"
@@ -19,27 +17,10 @@
 #include <map>
 #include <memory>
 #include <utility>
-/*
-// Helper class for storing pointers to rendering data
-class RenderData
-{
-public:
-	std::unique_ptr<VertexArray> m_va;
-	std::unique_ptr<IndexBuffer> m_ib;
-	std::unique_ptr<Shader> m_shader;
 
-	RenderData(
-		std::unique_ptr<VertexArray>& va,
-		std::unique_ptr<IndexBuffer>& ib,
-		std::unique_ptr<Shader>& shader)
-	{
-		// Move the pointers into the structure
-		m_va = std::move(va);
-		m_ib = std::move(ib);
-		m_shader = std::move(shader);
-	}
-};
-*/
+// Forward-declare RenderedObject to enable references
+class RenderedObject;
+
 /*
 Render a RenderedObject on screen.
 
@@ -81,4 +62,5 @@ public:
 	void render(const RenderedObject& rObj,
 		int s_width, int s_height);
 	void clear(const std::array<float, 4>& bckgrnd_color);
+	void remove_from_cache(int rObj_uid);
 };

@@ -3,8 +3,9 @@
 Battlefield::Battlefield(float window_width, float window_height) : 
 	m_alien_speed{1.0f},
 	m_window_width{window_width}, m_window_height{window_height},
-	m_renderer{}, m_alien_textures{}, m_aliens{}, m_alien_bullets{}
+	m_alien_textures{}, m_aliens{}, m_alien_bullets{}
 {
+	m_renderer = std::make_shared<Renderer>();
 	m_alien_textures = std::make_shared<std::vector<std::unique_ptr<Texture>>>();
 
 	// Load test texture.
@@ -24,6 +25,7 @@ void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
 		m_alien_textures
 	);
 	alien_ptr->set_current_texture(0);
+	alien_ptr->register_renderer(m_renderer);
 	m_aliens.push_back(std::move(alien_ptr));
 }
 
@@ -59,7 +61,10 @@ void Battlefield::aliens_shoot(float time_elapsed)
 			alien_ptr->maybe_shoot(time_elapsed, m_window_width)};
 
 		if (alien_bull_ptr)
+		{
+			alien_bull_ptr->register_renderer(m_renderer);
 			m_alien_bullets.push_back(std::move(alien_bull_ptr));
+		}
 	}
 }
 
@@ -99,8 +104,8 @@ void Battlefield::render_aliens()
 {
 	for (auto& alien : m_aliens)
 	{
-		m_renderer.init_render(*alien, m_window_width, m_window_height);
-		m_renderer.render(*alien, m_window_width, m_window_height);
+		m_renderer->init_render(*alien, m_window_width, m_window_height);
+		m_renderer->render(*alien, m_window_width, m_window_height);
 	}
 }
 
@@ -108,8 +113,8 @@ void Battlefield::render_alien_bullets()
 {
 	for (auto& alien_bullet : m_alien_bullets)
 	{
-		m_renderer.init_render(*alien_bullet, m_window_width, m_window_height);
-		m_renderer.render(*alien_bullet, m_window_width, m_window_height);
+		m_renderer->init_render(*alien_bullet, m_window_width, m_window_height);
+		m_renderer->render(*alien_bullet, m_window_width, m_window_height);
 	}
 }
 

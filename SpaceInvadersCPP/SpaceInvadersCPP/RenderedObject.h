@@ -8,6 +8,9 @@
 #include <memory>
 #include <string>
 
+// Forward-declarer Renderer to enable pointers
+class Renderer;
+
 // Implements functionality that all rendered objects should have
 class RenderedObject
 {
@@ -25,6 +28,7 @@ private:
 
 	int m_current_texture;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_textures;
+	std::shared_ptr<Renderer> m_renderer;
 
 	static int rObj_count;
 public:
@@ -40,6 +44,7 @@ public:
 		std::shared_ptr<std::vector<std::unique_ptr<Texture>>>{nullptr});
 
 	RenderedObject(const RenderedObject& other);
+	~RenderedObject();
 
 	void move_to(const std::array<float, 2>& bottomleft);
 	void set_velocity(const std::array<float, 2>& velocity);
@@ -63,6 +68,8 @@ public:
 	const std::array<float, 4>& get_color() const { return m_color; }
 
 	const std::array<float, 2>& get_bottomleft() const { return m_bottomleft; }
+
+	void register_renderer(std::shared_ptr<Renderer>& renderer) { m_renderer = renderer; }
 
 	void gradient_move(float time_elapsed);
 };

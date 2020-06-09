@@ -157,16 +157,16 @@ int main()
 		last_loop_time = glfwGetTime();
 
 		battlefield.spawn_alien_row(21, 10.0);
-		if (glfwGetTime() - last_move_time > 0.05)
-		{
-			time_elapsed = static_cast<float>(glfwGetTime() - last_move_time);
-			last_move_time = glfwGetTime();
+		//if (glfwGetTime() - last_move_time > 0.05)
+		//{
+		//}
+		time_elapsed = static_cast<float>(glfwGetTime() - last_move_time);
+		last_move_time = glfwGetTime();
 
-			// Ticking actions
-			battlefield.aliens_shoot(time_elapsed);
+		// Ticking actions
+		battlefield.aliens_shoot(time_elapsed);
 
-			battlefield.move_objects(time_elapsed);
-		}
+		battlefield.move_objects(time_elapsed);
 		battlefield.render_objects();
 
 		// Show rendered window
