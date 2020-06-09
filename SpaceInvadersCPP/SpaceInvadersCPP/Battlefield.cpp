@@ -8,7 +8,7 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_alien_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
 	m_player_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
 	m_aliens{}, m_alien_bullets{},
-	m_player{},
+	m_player{}, m_player_bullets{},
 	m_renderer{ std::make_shared<Renderer>() },
 	m_bottom_padding{ 50.0f },
 	m_sides_padding{ 100.0f }
@@ -44,6 +44,15 @@ void Battlefield::create_player()
 	player_ptr->set_current_texture(0);
 	player_ptr->register_renderer(m_renderer);
 	m_player = std::move(player_ptr);
+}
+
+void Battlefield::player_shoots()
+{
+	while (auto bullet = std::move(m_player->try_shoot()))
+	{
+		bullet->register_renderer(m_renderer);
+		m_player_bullets.push_back(std::move(bullet));
+	}
 }
 
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
@@ -107,6 +116,7 @@ void Battlefield::move_objects(float time_elapsed)
 	move_aliens(time_elapsed);
 	move_alien_bullets(time_elapsed);
 	move_player(time_elapsed);
+	move_player_bullets(time_elapsed);
 }
 
 void Battlefield::render_objects()
@@ -114,9 +124,10 @@ void Battlefield::render_objects()
 	// Render everything on the battlefield
 	// Be mindful of priority (front objects rendering last)
 
+	render_player();
 	render_aliens();
 	render_alien_bullets();
-	render_player();
+	render_player_bullets();
 }
 
 void Battlefield::move_aliens(float time_elapsed)
@@ -152,6 +163,34 @@ void Battlefield::move_alien_bullets(float time_elapsed)
 				return alien_bullet == nullptr;
 			}
 			));
+	}
+}
+
+void Battlefield::move_player_bullets(float time_elapsed)
+{
+	bool cleanup{ false };
+	for (auto& player_bullet : m_player_bullets)
+	{
+		player_bullet->gradient_move(time_elapsed);
+		if (player_bullet->get_bottomleft()[1] > m_window_height)
+		{
+			// Destroy off-screen bullet
+			// This leaves empty pointers in m_player_bullets
+			// but avoids constant resizing
+			player_bullet.reset();
+			cleanup = true;
+		}
+	}
+	if (cleanup)
+	{
+		m_player_bullets.erase(std::remove_if(
+			m_player_bullets.begin(),
+			m_player_bullets.end(),
+			[](std::unique_ptr<PlayerBullet>& player_bullet)
+			{
+				return player_bullet == nullptr;
+			}
+		));
 	}
 }
 
@@ -208,5 +247,14 @@ void Battlefield::render_player()
 {
 	m_renderer->init_render(*m_player, m_window_width, m_window_height);
 	m_renderer->render(*m_player, m_window_width, m_window_height);
+}
+
+void Battlefield::render_player_bullets()
+{
+	for (auto& player_bullet : m_player_bullets)
+	{
+		m_renderer->init_render(*player_bullet, m_window_width, m_window_height);
+		m_renderer->render(*player_bullet, m_window_width, m_window_height);
+	}
 }
 

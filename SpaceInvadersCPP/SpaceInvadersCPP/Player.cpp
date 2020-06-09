@@ -59,21 +59,23 @@ void Player::push_bullets(float new_cooldown, float speed)
 
 std::unique_ptr<PlayerBullet> Player::try_shoot()
 {
-	if (m_pending_bullets.back().second <= 0.0f)
+	if (!m_pending_bullets.empty())
 	{
-		auto bullet = std::move(m_pending_bullets.back().first);
-		m_pending_bullets.pop_back();
+		if (m_pending_bullets.back().second <= 0.0f)
+		{
+			auto bullet = std::move(m_pending_bullets.back().first);
+			m_pending_bullets.pop_back();
 
-		// Set origin
-		bullet->move_to(std::array<float, 2>{
-			// Set starting X coordinate
-			get_bottomleft()[0] + get_width() / 2.0f - bullet->get_width() / 2.0f,
-			// Set starting Y coordinate
-			get_bottomleft()[1] + bullet->get_height()
-		});
+			// Set origin
+			bullet->move_to(std::array<float, 2>{
+				// Set starting X coordinate
+				get_bottomleft()[0] + get_width() / 2.0f - bullet->get_width() / 2.0f,
+					// Set starting Y coordinate
+					get_bottomleft()[1] + get_height()
+			});
 
-		return bullet;
+			return bullet;
+		}
 	}
-
 	return nullptr;
 }

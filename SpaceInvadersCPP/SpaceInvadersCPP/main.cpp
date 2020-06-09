@@ -203,6 +203,7 @@ int main()
 		battlefield.aliens_shoot(time_elapsed);
 
 		battlefield.get_player()->tick_time(time_elapsed);
+		battlefield.player_shoots();
 
 		battlefield.move_objects(time_elapsed);
 		battlefield.render_objects();

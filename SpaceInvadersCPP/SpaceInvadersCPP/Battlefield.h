@@ -6,6 +6,7 @@
 #include "Alien.h"
 #include "AlienBullet.h"
 #include "Player.h"
+#include "PlayerBullet.h"
 #include "RenderedObject.h"
 
 #include <algorithm>
@@ -26,15 +27,18 @@ private:
 	std::vector<std::unique_ptr<Alien>> m_aliens;
 	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
 	std::unique_ptr<Player> m_player;
+	std::vector<std::unique_ptr<PlayerBullet>> m_player_bullets;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_alien_textures;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_player_textures;
 
 	void move_aliens(float time_elapsed);
 	void move_alien_bullets(float time_elapsed);
+	void move_player_bullets(float time_elapsed);
 	void move_player(float time_elapsed);
 	void render_aliens();
 	void render_alien_bullets();
 	void render_player();
+	void render_player_bullets();
 public:
 	Battlefield(float window_width, float window_height);
 
@@ -46,6 +50,7 @@ public:
 	void aliens_shoot(float time_elapsed);
 
 	void create_player();
+	void player_shoots();
 
 	void move_objects(float time_elapsed);
 	void render_objects();
