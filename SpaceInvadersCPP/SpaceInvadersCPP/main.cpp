@@ -1,13 +1,16 @@
 // main gaming loop implementation
 
-#include <iostream>
+#include "RenderedObject.h"
 
-// GLEW: for loading OpenGL functions
+// GLEW: for loading OpenGL functions newer than OpenGL 1.1
 #define GLEW_STATIC
 #include <GL/glew.h>
-
-// GLFW: OpenGL framework
+// GLFW: OpenGL framework - cross-platform window
+// and access to context
 #include <GLFW/glfw3.h>
+
+#include <iostream>
+
 
 void error_callback(int error_code, const char* description)
 {
@@ -52,6 +55,7 @@ int main()
 
 	glfwMakeContextCurrent(window);
 
+	// GLEW requires a current context, so we initialize it here
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
@@ -60,20 +64,24 @@ int main()
 		return EXIT_FAILURE;
 	}
 
+	std::cout << glGetString(GL_VERSION) << '\n';
+
 	// Set up the viewport
 	glViewport(0, 0, window_width, window_height);
 
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// Query events
-		glfwPollEvents();
-
+		// Render
 		glClearColor(0.0, 0.5, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		// Show rendered window
 		glfwSwapBuffers(window);
 
+		// Poll waiting events, send them to callbacks,
+		// return whether there are events or not
+		glfwPollEvents();
 	}
 
 	glfwTerminate();
