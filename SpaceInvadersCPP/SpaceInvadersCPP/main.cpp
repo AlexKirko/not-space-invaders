@@ -205,6 +205,12 @@ int main()
 	assert(location != -1 && "Uniform not found in shader.");
 	glUniform4f(location, 1.0f, 0.2f, 0.2f, 1.0f);
 
+	// Unbind everything
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 	float r { 1.0f };
 	float increment{ -0.01f };
 	// Start the main loop
@@ -224,8 +230,9 @@ int main()
 		}
 		r += increment;
 
-		glBindVertexArray(varray);
+		glUseProgram(shader);
 		glUniform4f(location, r, 0.2f, 0.2f, 1.0f);
+		glBindVertexArray(varray);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 
