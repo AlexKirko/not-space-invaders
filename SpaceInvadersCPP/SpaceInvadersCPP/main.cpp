@@ -15,6 +15,9 @@
 
 #include "RenderedObject.h"
 
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+
 // GLEW: for loading OpenGL functions newer than OpenGL 1.1
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -228,6 +231,9 @@ int main()
 	Texture texture{"cpp_logo_200.png"};
 	texture.bind();
 	shader.set_uniform_1i("u_texture", 0);
+
+	glm::mat4 projection = glm::ortho(-2.0, 2.0, -1.5, 1.5);
+	shader.set_uniform_mat4("u_mvp", projection);
 
 	// Unbind everything
 	va.unbind();

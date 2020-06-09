@@ -3,6 +3,8 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include "glm.hpp"
+
 #include <array>
 #include <stdexcept>
 #include <fstream>
@@ -26,4 +28,5 @@ public:
 
 	void set_uniform_4f(const std::string& name, const std::array<float, 4>& floats) const;
 	void set_uniform_1i(const std::string& name, unsigned int ind) const;
+	void set_uniform_mat4(const std::string& name, const glm::mat4& projection) const;
 };

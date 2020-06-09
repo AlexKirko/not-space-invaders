@@ -92,14 +92,14 @@
     <ClInclude Include="VertexBufferLayout.h">
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files\vendor\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
