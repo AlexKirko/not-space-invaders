@@ -20,6 +20,8 @@ class Alien : public RenderedObject
 private:
 	static std::mt19937 random_seeder;
 	static std::uniform_int_distribution<int> rng;
+
+	int m_hp;
 public:
 	Alien(const std::array<float, 2>& bottomleft,
 		int width, int height,
@@ -34,11 +36,15 @@ public:
 				angle,
 				velocity,
 				color,
-				textures }
+				textures },
+			m_hp{ 0 }
 	{}
 
 	std::unique_ptr<AlienBullet> maybe_shoot(float time_elapsed,
 		float window_width,
 		float bull_per_second=0.04, float speed=80.0
 		);
+
+	void decrease_hp(int damage) { m_hp -= damage; }
+	const int get_hp() const { return m_hp; }
 };
