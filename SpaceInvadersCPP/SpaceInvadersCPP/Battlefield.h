@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 #include "RenderedObject.h"
+#include "RenderedString.h"
 
 #include <algorithm>
 #include <memory>
@@ -28,8 +29,10 @@ private:
 	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
 	std::unique_ptr<Player> m_player;
 	std::vector<std::unique_ptr<PlayerBullet>> m_player_bullets;
+	std::vector<std::unique_ptr<RenderedString>> m_strings;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_alien_textures;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_player_textures;
+	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_fonts;
 
 	void move_aliens(float time_elapsed);
 	void move_alien_bullets(float time_elapsed);
@@ -40,6 +43,7 @@ private:
 	void render(std::unique_ptr<rObjType>& r_object);
 	template<typename rObjType>
 	void render(std::vector<std::unique_ptr<rObjType>> &r_objects);
+	void render(std::vector<std::unique_ptr<RenderedString>> &r_strings);
 public:
 	Battlefield(float window_width, float window_height);
 
@@ -56,6 +60,8 @@ public:
 	void check_hits();
 	void check_player_hits();
 	void check_alien_hits();
+
+	void create_score();
 
 	void move_objects(float time_elapsed);
 	void render_objects();

@@ -30,7 +30,7 @@ RenderedObject::RenderedObject(
 		textures != std::shared_ptr<std::vector<std::unique_ptr<Texture>>>{})
 	{
 		throw std::runtime_error("Attempted to set textures"
-			" velocity on an object that doesn't use textures.");
+			" on an object that doesn't use textures.");
 	}
 	m_velocity = velocity;
 	m_textures = textures;
@@ -89,7 +89,7 @@ void RenderedObject::set_textures(std::shared_ptr<std::vector<std::unique_ptr<Te
 	// Textures are created by switching to a new game state
 	// objects share textures to avoid duplication
 	m_use_textures = true;
-	auto m_textures = textures;
+	m_textures = textures;
 }
 
 void RenderedObject::set_current_texture(int current_texture)

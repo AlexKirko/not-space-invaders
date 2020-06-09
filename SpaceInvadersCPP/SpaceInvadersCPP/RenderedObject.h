@@ -53,6 +53,10 @@ public:
 	void set_velocity(const std::array<float, 2>& velocity);
 
 	void set_textures(std::shared_ptr<std::vector<std::unique_ptr<Texture>>> textures);
+	const std::shared_ptr<std::vector<std::unique_ptr<Texture>>>& get_textures() const
+	{
+		return m_textures;
+	}
 
 	void set_current_texture(int current_texture);
 	const Texture& get_current_texture() const;

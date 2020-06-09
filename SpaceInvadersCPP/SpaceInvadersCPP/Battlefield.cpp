@@ -7,6 +7,7 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_window_width{window_width}, m_window_height{window_height},
 	m_alien_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
 	m_player_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
+	m_fonts{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
 	m_aliens{}, m_alien_bullets{},
 	m_player{}, m_player_bullets{},
 	m_renderer{ std::make_shared<Renderer>() },
@@ -20,6 +21,11 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	// Load player texture
 	auto pl_texture1 = std::make_unique<Texture>("res/textures/player.png");
 	m_player_textures->push_back(std::move(pl_texture1));
+
+	// Load font bitmap
+	auto fnt_texture1 = std::make_unique<Texture>("res/font/ExportedFont.bmp");
+	//auto fnt_texture1 = std::make_unique<Texture>("res/textures/player.png");
+	m_fonts->push_back(std::move(fnt_texture1));
 }
 
 void Battlefield::create_player()
@@ -137,6 +143,16 @@ void Battlefield::check_alien_hits()
 	}
 }
 
+void Battlefield::create_score()
+{
+	m_strings.push_back(std::make_unique<RenderedString>(
+		std::string{ "SCORE: 0" },
+		std::array<float, 2> {500.0, 50.0}, 40.0, 0.65,
+		m_fonts
+		)
+	);
+}
+
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
 {
 	auto alien_ptr = std::make_unique<Alien>(
@@ -218,7 +234,7 @@ void Battlefield::render_objects()
 	render(m_aliens);
 	render(m_alien_bullets);
 	render(m_player_bullets);
-
+	render(m_strings);
 }
 
 void Battlefield::move_aliens(float time_elapsed)
@@ -322,5 +338,18 @@ void Battlefield::render(std::vector<std::unique_ptr<rObjType>>& r_objects)
 	for (auto& r_object : r_objects)
 	{
 		render(r_object);
+	}
+}
+
+// Render all the strings on the battlefield
+// TODO: Consider moving to a separate file after adding other game screens
+void Battlefield::render(std::vector<std::unique_ptr<RenderedString>>& r_strings)
+{
+	for (auto& str : r_strings)
+	{
+		for (auto& lett : str->get_letters())
+		{
+			render(lett);
+		}
 	}
 }
