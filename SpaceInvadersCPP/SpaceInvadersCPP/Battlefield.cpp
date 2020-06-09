@@ -9,9 +9,7 @@ Battlefield::Battlefield(float window_width, float window_height) :
 
 	// Load test texture.
 	auto texture_ptr = std::make_unique<Texture>("res/textures/cpp_logo_200.png");
-	texture_ptr->bind();
 	m_alien_textures->push_back(std::move(texture_ptr));
-	texture_ptr->unbind();
 }
 
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
