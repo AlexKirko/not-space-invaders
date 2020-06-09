@@ -8,6 +8,8 @@
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexBufferLayout.h"
+#include "VertexArray.h"
 
 #include "RenderedObject.h"
 
@@ -199,20 +201,17 @@ int main()
 		2, 3, 0
 	};
 
-	unsigned int varray{};
-	glGenVertexArrays(1, &varray);
-	glBindVertexArray(varray);
-
+	VertexArray va{};
+	va.bind();
 	VertexBuffer vBuffer{positions, 2 * 4 * sizeof(float) };
 
-	unsigned int buffer{};
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-	glEnableVertexAttribArray(0);
+	VertexBufferLayout vbLayout{0};
+	vbLayout.push<float>(2);
+	va.add_buffer(vBuffer, vbLayout);
 
 	IndexBuffer iBuffer{ indices, 2 * 3 };
 
-	glBindVertexArray(0);
+	va.unbind();
 
 	std::string vertex_shader{ load_shader("basic_v.shader") };
 	std::string fragment_shader{ load_shader("basic_f.shader") };
@@ -261,10 +260,10 @@ int main()
 
 		glUseProgram(shader);
 		glUniform4f(location, r, 0.2f, 0.2f, 1.0f);
-		glBindVertexArray(varray);
+		va.bind();
 		iBuffer.bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-		glBindVertexArray(0);
+		va.unbind();
 
 
 

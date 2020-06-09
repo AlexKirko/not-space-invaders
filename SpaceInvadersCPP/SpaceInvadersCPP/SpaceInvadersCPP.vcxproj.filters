@@ -45,6 +45,9 @@
     <ClCompile Include="IndexBuffer.cpp">
       <Filter>Source Files\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="VertexArray.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderedObject.h">
@@ -57,6 +60,12 @@
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexArray.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBufferLayout.h">
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
   </ItemGroup>

@@ -150,13 +150,16 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
     <ClCompile Include="opengl_debug_output.cpp" />
+    <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="opengl_debug_output.h" />
     <ClInclude Include="RenderedObject.h" />
+    <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="basic_f.shader" />
