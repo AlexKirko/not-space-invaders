@@ -131,6 +131,22 @@ static GLFWwindow* opengl_setup(int in_window_width, int in_window_height,
 	return window;
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	Battlefield* battlefield = static_cast<Battlefield*>(glfwGetWindowUserPointer(window));
+
+	MoveTypes player_move{ MoveTypes::STILL };
+	if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		player_move = MoveTypes::RIGHT;
+	}
+	else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+	{
+		player_move = MoveTypes::LEFT;
+	}
+	battlefield->get_player()->movement(player_move, battlefield->get_player_speed());
+}
+
 int main()
 {
 	// Window size
@@ -142,9 +158,14 @@ int main()
 	GLFWwindow* window = opengl_setup(WIDTH, HEIGHT,
 		window_width, window_height, "Space Invaders");
 
+	glfwSetKeyCallback(window, key_callback);
+
 	Renderer renderer{};
 
 	Battlefield battlefield{ static_cast<float>(window_width), static_cast<float>(window_height) };
+	glfwSetWindowUserPointer(window, &battlefield);
+
+	battlefield.create_player(std::array<float, 2>{static_cast<float>(window_width) / 2.0f - 30.0f, 100.0f});
 	// Start the main loop
 	double last_loop_time{ glfwGetTime() };
 	double last_move_time{ glfwGetTime() };

@@ -150,6 +150,7 @@
     <ClCompile Include="Battlefield.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
     <ClCompile Include="opengl_debug_output.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Battlefield.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="opengl_debug_output.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RenderedObject.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />

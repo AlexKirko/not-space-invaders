@@ -1,16 +1,41 @@
 #include "Battlefield.h"
 
-Battlefield::Battlefield(float window_width, float window_height) : 
-	m_alien_speed{1.0f},
+Battlefield::Battlefield(float window_width, float window_height) :
+	// Pixels per second
+	m_alien_speed{ 30.0f },
+	m_player_speed{ 100.0f },
 	m_window_width{window_width}, m_window_height{window_height},
-	m_alien_textures{}, m_aliens{}, m_alien_bullets{}
+	m_alien_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
+	m_player_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
+	m_aliens{}, m_alien_bullets{},
+	m_player{},
+	m_renderer{ std::make_shared<Renderer>() }
 {
-	m_renderer = std::make_shared<Renderer>();
-	m_alien_textures = std::make_shared<std::vector<std::unique_ptr<Texture>>>();
-
 	// Load test texture.
-	auto texture_ptr = std::make_unique<Texture>("res/textures/cpp_logo_200.png");
-	m_alien_textures->push_back(std::move(texture_ptr));
+	auto al_texture1 = std::make_unique<Texture>("res/textures/cpp_logo_200.png");
+	m_alien_textures->push_back(std::move(al_texture1));
+
+	// Load player texture
+	auto pl_texture1 = std::make_unique<Texture>("res/textures/player.png");
+	m_player_textures->push_back(std::move(pl_texture1));
+}
+
+void Battlefield::create_player(std::array<float, 2> bottom_left)
+{
+	auto player_ptr = std::make_unique<Player>(
+		bottom_left,
+		60, 60,
+		true, true,
+		0.0,
+		std::array<float, 2>{0.0f, 0.0f},
+		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
+		m_player_textures,
+		3,
+		m_player_speed
+		);
+	player_ptr->set_current_texture(0);
+	player_ptr->register_renderer(m_renderer);
+	m_player = std::move(player_ptr);
 }
 
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
@@ -20,7 +45,7 @@ void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
 		50, 50,
 		true, true,
 		0.0,
-		std::array<float, 2>{0.0f, m_alien_speed * -30.0f},
+		std::array<float, 2>{0.0f, -m_alien_speed},
 		std::array<float, 4>{1.0, 1.0, 1.0, 1.0},
 		m_alien_textures
 	);
@@ -73,6 +98,7 @@ void Battlefield::move_objects(float time_elapsed)
 	// Move all movable objects according to velocity
 	move_aliens(time_elapsed);
 	move_alien_bullets(time_elapsed);
+	move_player(time_elapsed);
 }
 
 void Battlefield::render_objects()
@@ -82,6 +108,7 @@ void Battlefield::render_objects()
 
 	render_aliens();
 	render_alien_bullets();
+	render_player();
 }
 
 void Battlefield::move_aliens(float time_elapsed)
@@ -120,6 +147,12 @@ void Battlefield::move_alien_bullets(float time_elapsed)
 	}
 }
 
+void Battlefield::move_player(float time_elapsed)
+{
+	m_player->gradient_move(time_elapsed);
+}
+
+
 void Battlefield::render_aliens()
 {
 	for (auto& alien : m_aliens)
@@ -136,5 +169,11 @@ void Battlefield::render_alien_bullets()
 		m_renderer->init_render(*alien_bullet, m_window_width, m_window_height);
 		m_renderer->render(*alien_bullet, m_window_width, m_window_height);
 	}
+}
+
+void Battlefield::render_player()
+{
+	m_renderer->init_render(*m_player, m_window_width, m_window_height);
+	m_renderer->render(*m_player, m_window_width, m_window_height);
 }
 
