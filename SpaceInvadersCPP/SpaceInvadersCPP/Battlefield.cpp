@@ -9,7 +9,8 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_player_textures{ std::make_shared<std::vector<std::unique_ptr<Texture>>>() },
 	m_aliens{}, m_alien_bullets{},
 	m_player{},
-	m_renderer{ std::make_shared<Renderer>() }
+	m_renderer{ std::make_shared<Renderer>() },
+	m_bottom_padding{ 50.0f }
 {
 	// Load test texture.
 	auto al_texture1 = std::make_unique<Texture>("res/textures/cpp_logo_200.png");
@@ -20,11 +21,17 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_player_textures->push_back(std::move(pl_texture1));
 }
 
-void Battlefield::create_player(std::array<float, 2> bottom_left)
+void Battlefield::create_player()
 {
+	std::array<int, 2> player_size{ 60, 60 };
 	auto player_ptr = std::make_unique<Player>(
-		bottom_left,
-		60, 60,
+		std::array<float, 2> {
+			// Player spawn X coordinate
+			m_window_width / 2.0f - static_cast<float>(player_size[0]) / 2.0f,
+			// Player spawn Y coordinate
+			m_bottom_padding + static_cast<float>(player_size[1])
+		},
+		player_size[0], player_size[1],
 		true, true,
 		0.0,
 		std::array<float, 2>{0.0f, 0.0f},

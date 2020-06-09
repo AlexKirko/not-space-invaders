@@ -164,8 +164,8 @@ int main()
 
 	Battlefield battlefield{ static_cast<float>(window_width), static_cast<float>(window_height) };
 	glfwSetWindowUserPointer(window, &battlefield);
-	// Spawn the player at target coordinates
-	battlefield.create_player(std::array<float, 2>{static_cast<float>(window_width) / 2.0f - 30.0f, 100.0f});
+	// Spawn the player (spawn coordinates calculated in the Battlefield class)
+	battlefield.create_player();
 	// Start the main loop
 	double last_loop_time{ glfwGetTime() };
 	double last_move_time{ glfwGetTime() };

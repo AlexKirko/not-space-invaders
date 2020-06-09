@@ -20,6 +20,7 @@ private:
 	float m_window_height;
 	float m_alien_speed;
 	float m_player_speed;
+	float m_bottom_padding;
 	std::shared_ptr<Renderer> m_renderer;
 	std::vector<std::unique_ptr<Alien>> m_aliens;
 	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
@@ -43,7 +44,7 @@ public:
 
 	void aliens_shoot(float time_elapsed);
 
-	void create_player(std::array<float, 2> bottom_left);
+	void create_player();
 
 	void move_objects(float time_elapsed);
 	void render_objects();
