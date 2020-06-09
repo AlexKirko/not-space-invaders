@@ -7,6 +7,7 @@ Renderer::Renderer() : m_cached_rdata{}
 void Renderer::init_render(const RenderedObject& rObj,
 	int s_width, int s_height)
 {
+	// Horizontal is always 0 index
 	std::array<float, 2> b_left = rObj.get_bottomleft();
 	float width = rObj.get_width();
 	float height = rObj.get_height();
@@ -25,6 +26,9 @@ void Renderer::init_render(const RenderedObject& rObj,
 		b_left[0] + width, b_left[1] + height,
 		b_left[0],         b_left[1] + height,
 	};
+
+	// Pre-calculate image center for future rotation
+	glm::vec3 rect_center{b_left[0] + width / 2, b_left[1] + height / 2, 0.0f};
 
 	// This index buffer draws a rectangle
 	unsigned int indices[] = {
@@ -76,7 +80,22 @@ void Renderer::init_render(const RenderedObject& rObj,
 	// Fix the image aspect ratio via linear transformation (orthonormal projection)
 	glm::mat4 projection = glm::ortho(0.0, static_cast<double>(s_width),
 		0.0, static_cast<double>(s_height));
-	shader_ptr->set_uniform_mat4("u_mvp", projection);
+
+	// Rotate if necessary
+	glm::mat4 model{ 1.0f };
+	if (rObj.get_angle() != 0.0)
+	{
+		// Translate to screen center, rotate, translate back
+		model = glm::translate(model,  rect_center);
+		// Minus before angle needed to turn clockwise for
+		// positive angles
+		model = glm::rotate(model,
+			glm::radians(-rObj.get_angle()),
+			glm::vec3{0.0f, 0.0f, 1.0f});
+		model = glm::translate(model, -rect_center);
+	}
+
+	shader_ptr->set_uniform_mat4("u_mvp", projection * model);
 
 	// Unbind everything
 	va_ptr->unbind();
