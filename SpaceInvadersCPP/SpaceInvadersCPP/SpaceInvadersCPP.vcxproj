@@ -148,8 +148,10 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
+    <ClCompile Include="opengl_debug_output.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="opengl_debug_output.h" />
     <ClInclude Include="RenderedObject.h" />
   </ItemGroup>
   <ItemGroup>

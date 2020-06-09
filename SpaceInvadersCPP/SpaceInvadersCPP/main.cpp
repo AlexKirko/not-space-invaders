@@ -1,5 +1,11 @@
 // main gaming loop implementation
 
+// Define if we need to force program to run on an Nvidia GPU
+#define NVIDIA_GPU
+#define DEBUG
+
+#include "opengl_debug_output.h"
+
 #include "RenderedObject.h"
 
 // GLEW: for loading OpenGL functions newer than OpenGL 1.1
@@ -16,7 +22,6 @@
 #include <fstream>
 
 // Necessary to force program running on Nvidia
-#define NVIDIA_GPU
 #ifdef NVIDIA_GPU
 #include <Windows.h>
 
@@ -122,6 +127,9 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+#ifdef DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+#endif
 
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Space Invaders", nullptr, nullptr);
 
@@ -150,6 +158,25 @@ int main()
 		std::cerr << "Error initializing GLEW.";
 
 		return EXIT_FAILURE;
+	}
+
+	// If successfuly in debug, register callback and init
+	int gl_context_flags{};
+	glGetIntegerv(GL_CONTEXT_FLAGS, &gl_context_flags);
+	if (gl_context_flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+	{
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		// The only place we need old-fashioned OpenGL error-handling
+		// is here
+		while (glGetError() != GL_NO_ERROR);
+		glDebugMessageCallback(opengl_debug_output, nullptr);
+		unsigned int error{};
+		while ((error = glGetError()) != GL_NO_ERROR)
+		{
+			std::cerr << "Error code: " << error << '\n';
+		}
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	}
 
 	std::cout << glGetString(GL_VERSION) << '\n';

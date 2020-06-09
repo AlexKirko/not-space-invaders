@@ -16,6 +16,12 @@
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{5aa70f15-c1eb-4826-97c6-e80a5b059c6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\opengl_utility">
+      <UniqueIdentifier>{95f29419-0798-410e-a8ce-659647e954fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\opengl_utility">
+      <UniqueIdentifier>{b6b025be-ddfe-42d3-bd82-d71bb42a0440}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,10 +30,16 @@
     <ClCompile Include="RenderedObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="opengl_debug_output.cpp">
+      <Filter>Source Files\opengl_utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderedObject.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl_debug_output.h">
+      <Filter>Header Files\opengl_utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
