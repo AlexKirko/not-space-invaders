@@ -233,6 +233,7 @@ int main()
 		glUseProgram(shader);
 		glUniform4f(location, r, 0.2f, 0.2f, 1.0f);
 		glBindVertexArray(varray);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buffer);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 
