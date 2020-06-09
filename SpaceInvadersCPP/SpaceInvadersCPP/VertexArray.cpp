@@ -27,11 +27,12 @@ void VertexArray::add_buffer(const VertexBuffer& vb, const VertexBufferLayout& v
 	vb.bind();
 	const auto& elements = vbLayout.get_elements();
 	int offset{ 0 };
-	for (const auto& element : elements)
+	for (int i{ 0 }; i < elements.size(); ++i)
 	{
-		glVertexAttribPointer(0, element.count, element.type,
+		const auto& element = elements[i];
+		glVertexAttribPointer(i, element.count, element.type,
 			element.normalized, vbLayout.get_stride(), (const void*)offset);
-		glEnableVertexAttribArray(0);
-		offset += VertexBufferElement::get_size(element.type);
+		glEnableVertexAttribArray(i);
+		offset += element.count * VertexBufferElement::get_size(element.type);
 	}
 }

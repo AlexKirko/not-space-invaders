@@ -11,6 +11,7 @@
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 #include "RenderedObject.h"
 
@@ -190,11 +191,15 @@ int main()
 	// Set up the viewport
 	glViewport(0, 0, window_width, window_height);
 
+	// Set the blending function
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	
 	float positions[] = {
-		-0.5, -0.5,
-		 0.5, -0.5,
-		 0.5,  0.5,
-		-0.5, 0.5
+		-0.5, -0.5, 0.0, 0.0,
+		 0.5, -0.5, 1.0, 0.0,
+		 0.5,  0.5, 1.0, 1.0,
+		-0.5,  0.5, 0.0, 1.0
 	};
 
 	unsigned int indices[] = {
@@ -204,40 +209,42 @@ int main()
 
 	VertexArray va{};
 	va.bind();
-	VertexBuffer vBuffer{positions, 2 * 4 * sizeof(float) };
+	VertexBuffer vBuffer{positions, 4 * 4 * sizeof(float) };
 
 	VertexBufferLayout vbLayout{0};
+	vbLayout.push<float>(2);
 	vbLayout.push<float>(2);
 	va.add_buffer(vBuffer, vbLayout);
 
 	IndexBuffer iBuffer{ indices, 2 * 3 };
 
-	va.unbind();
 
-	Shader shader("basic_v.shader", "basic_f.shader");
+	Shader shader("texture_v.shader", "texture_f.shader");
 	shader.bind();
 
-	std::array<float, 4> color{ 1.0f, 0.2f, 0.2f, 1.0f };
-	shader.set_uniform_4f("u_color", color);
+	//std::array<float, 4> color{ 1.0f, 0.2f, 0.2f, 1.0f };
+	//shader.set_uniform_4f("u_color", color);
 
-	shader.unbind();
+	Texture texture{"cpp_logo_200.png"};
+	texture.bind();
+	shader.set_uniform_1i("u_texture", 0);
 
 	// Unbind everything
-	glBindVertexArray(0);
-	glUseProgram(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	va.unbind();
+	shader.unbind();
+	iBuffer.unbind();
+	texture.unbind();
 
-	float r { 1.0f };
-	float increment{ -0.01f };
+	/*float r { 1.0f };
+	float increment{ -0.01f };*/
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Render
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		if (r >= 1.0f)
+		
+		/*if (r >= 1.0f)
 		{
 			increment = -0.01f;
 		}
@@ -246,13 +253,14 @@ int main()
 			increment = 0.01f;
 		}
 		r += increment;
-		color[0] = r;
-
+		color[0] = r;*/
+		
 		shader.bind();
-		shader.set_uniform_4f("u_color", color);
+		//shader.set_uniform_4f("u_color", color);
 
 		va.bind();
 		iBuffer.bind();
+		texture.bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		va.unbind();
 		shader.unbind();

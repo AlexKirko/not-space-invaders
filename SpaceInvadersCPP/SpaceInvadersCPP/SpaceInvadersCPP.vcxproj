@@ -151,6 +151,8 @@
     <ClCompile Include="RenderedObject.cpp" />
     <ClCompile Include="opengl_debug_output.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
@@ -159,6 +161,8 @@
     <ClInclude Include="opengl_debug_output.h" />
     <ClInclude Include="RenderedObject.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexBufferLayout.h" />
@@ -166,6 +170,11 @@
   <ItemGroup>
     <None Include="basic_f.shader" />
     <None Include="basic_v.shader" />
+    <None Include="texture_f.shader" />
+    <None Include="texture_v.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="cpp_logo_200.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

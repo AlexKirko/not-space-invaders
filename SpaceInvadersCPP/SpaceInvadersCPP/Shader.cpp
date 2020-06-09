@@ -36,6 +36,16 @@ const unsigned int Shader::compile_shader(unsigned int type, const std::string& 
 	return id;
 }
 
+const int Shader::get_uniform_location(const std::string& name) const
+{
+	int location{ glGetUniformLocation(m_uid, name.c_str()) };
+	if (location == -1)
+	{
+		throw std::runtime_error(name + " uniform not found in shader.");
+	}
+	return location;
+}
+
 Shader::Shader(const std::string& vertex_filepath, const std::string& fragment_filepath)
 {
 	m_uid = glCreateProgram();
@@ -91,10 +101,12 @@ void Shader::unbind() const
 
 void Shader::set_uniform_4f(const std::string& name, const std::array<float, 4>& floats) const
 {
-	int location{ glGetUniformLocation(m_uid, name.c_str()) };
-	if (location == -1)
-	{
-		throw std::runtime_error(name + " uniform not found in shader.");
-	}
+	int location{ get_uniform_location(name) };
 	glUniform4f(location, floats[0], floats[1], floats[2], floats[3]);
+}
+
+void Shader::set_uniform_1i(const std::string& name, unsigned int ind) const
+{
+	int location{ get_uniform_location(name) };
+	glUniform1i(location, ind);
 }

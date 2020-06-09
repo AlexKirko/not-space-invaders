@@ -28,6 +28,21 @@
     <Filter Include="Header Files\rendering">
       <UniqueIdentifier>{e6925d7d-6aee-402e-93e1-db0a7123dc1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{76c24583-39a8-4d6c-824d-93eb0412b195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vendor">
+      <UniqueIdentifier>{0f65f997-7f06-4b5c-8da1-43bd8e076ada}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vendor\stb_image">
+      <UniqueIdentifier>{dd52faf8-1b9a-4ba5-845e-64fa23e79391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vendor">
+      <UniqueIdentifier>{00d2008b-65f5-45a4-b78d-49cf267e47f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vendor\stb_image">
+      <UniqueIdentifier>{cd6b06b5-ddce-412e-82c9-f1279c7d9af0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -50,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Source Files\vendor\stb_image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +95,12 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\vendor\stb_image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic_v.shader">
@@ -82,5 +109,16 @@
     <None Include="basic_f.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="texture_f.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="texture_v.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="cpp_logo_200.png">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
