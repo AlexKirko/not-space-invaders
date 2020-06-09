@@ -52,5 +52,8 @@ public:
 	const float get_width() const { return m_width; }
 	const float get_height() const { return m_height; }
 
+	void set_color(const std::array<float, 4>& color) { m_color = color; }
+	const std::array<float, 4>& get_color() const { return m_color; }
+
 	const std::array<float, 2>& get_bottomleft() const { return m_bottomleft; }
 };

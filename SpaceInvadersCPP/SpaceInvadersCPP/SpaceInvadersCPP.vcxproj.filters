@@ -72,6 +72,9 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>Source Files\vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RenderedObject.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files\vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
       <Filter>Header Files\rendering</Filter>
     </ClInclude>
   </ItemGroup>

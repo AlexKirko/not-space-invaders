@@ -6,12 +6,7 @@
 
 #include "opengl_debug_output.h"
 
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexBufferLayout.h"
-#include "VertexArray.h"
-#include "Shader.h"
-#include "Texture.h"
+#include "Renderer.h"
 
 #include "RenderedObject.h"
 
@@ -31,6 +26,7 @@
 #include <stdexcept>
 #include <string>
 #include <fstream>
+#include <vector>
 
 // Necessary to force program running on Nvidia
 #ifdef NVIDIA_GPU
@@ -218,78 +214,18 @@ int main()
 	);
 	rObj.set_current_texture(0);
 
-	std::array<float, 2> b_left = rObj.get_bottomleft();
-	float width = rObj.get_width();
-	float height = rObj.get_height();
+	Renderer renderer{};
 
-	float positions[] = {
-		b_left[0],         b_left[1],          0.0, 0.0,
-		b_left[0] + width, b_left[1],          1.0, 0.0,
-		b_left[0] + width, b_left[1] + height, 1.0, 1.0,
-		b_left[0],         b_left[1] + height, 0.0, 1.0
-	};
-
-	unsigned int indices[] = {
-		0, 1, 2,
-		2, 3, 0
-	};
-
-	VertexArray va{};
-	va.bind();
-	VertexBuffer vBuffer{positions, 4 * 4 * sizeof(float) };
-
-	VertexBufferLayout vbLayout{0};
-	vbLayout.push<float>(2);
-	vbLayout.push<float>(2);
-	va.add_buffer(vBuffer, vbLayout);
-
-	IndexBuffer iBuffer{ indices, 2 * 3 };
-
-	Shader shader{};
-	if (rObj.get_use_textures())
-	{
-		shader.reset_shaders("texture_v.shader", "texture_f.shader");
-		shader.bind();
-	}
-	else
-	{
-		shader.reset_shaders("basic_v.shader", "basic_f.shader");
-		shader.bind();
-	}
-
-	//std::array<float, 4> color{ 1.0f, 0.2f, 0.2f, 1.0f };
-	//shader.set_uniform_4f("u_color", color);
-	if (rObj.get_use_textures())
-		// Since this is a basic sprite engine, we don't use
-		// layered textures, so the slot is always 0.
-		shader.set_uniform_1i("u_texture", 0);
-
-	// Fix the image aspect ratio via linear transformation (orthonormal projection)
-	glm::mat4 projection = glm::ortho(0.0, static_cast<double>(WIDTH),
-		0.0, static_cast<double>(HEIGHT));
-	shader.set_uniform_mat4("u_mvp", projection);
-
-	// Unbind everything
-	va.unbind();
-	shader.unbind();
-	iBuffer.unbind();
-
+	renderer.init_render(rObj, WIDTH, HEIGHT);
 
 	// Start the main loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Render
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		renderer.clear(std::array<float, 4> {0.0f, 0.0f, 0.0f, 1.0f});
 		
-		shader.bind();
+		renderer.render(&rObj, WIDTH, HEIGHT);
 
-		va.bind();
-		iBuffer.bind();
-		rObj.get_current_texture().bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-		va.unbind();
-		shader.unbind();
 
 		// Show rendered window
 		glfwSwapBuffers(window);
