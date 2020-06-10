@@ -1,6 +1,6 @@
 #include "Battlefield.h"
 
-Battlefield::Battlefield(float window_width, float window_height) :
+Game::Game(float window_width, float window_height) :
 	// Pixels per second
 	m_alien_speed{ 30.0f },
 	m_player_speed{ 100.0f },
@@ -30,7 +30,7 @@ Battlefield::Battlefield(float window_width, float window_height) :
 }
 
 // Prepare the game for displaying
-void Battlefield::setup(int state)
+void Game::setup(int state)
 {
 	if (state == 0)
 	{
@@ -39,7 +39,7 @@ void Battlefield::setup(int state)
 }
 
 // Do all the per-cycle updates
-void Battlefield::cycle(float time_elapsed, int state)
+void Game::cycle(float time_elapsed, int state)
 {
 	if (state == 0)
 	{
@@ -57,7 +57,7 @@ void Battlefield::cycle(float time_elapsed, int state)
 	}
 }
 
-void Battlefield::create_player()
+void Game::create_player()
 {
 	std::array<int, 2> player_size{ 60, 60 };
 	auto player_ptr = std::make_unique<Player>(
@@ -82,7 +82,7 @@ void Battlefield::create_player()
 	m_player = std::move(player_ptr);
 }
 
-void Battlefield::player_shoots()
+void Game::player_shoots()
 {
 	while (auto bullet = std::move(m_player->try_shoot()))
 	{
@@ -91,13 +91,13 @@ void Battlefield::player_shoots()
 	}
 }
 
-void Battlefield::check_hits()
+void Game::check_hits()
 {
 	check_alien_hits();
 	check_player_hits();
 }
 
-void Battlefield::check_player_hits()
+void Game::check_player_hits()
 {
 	// For every player bullet,
 	// check if it has impacted any of the aliens
@@ -133,7 +133,7 @@ void Battlefield::check_player_hits()
 	}
 }
 
-void Battlefield::check_alien_hits()
+void Game::check_alien_hits()
 {
 	// For every alien bullet
 	// check if it impacted the player
@@ -177,7 +177,7 @@ void Battlefield::check_alien_hits()
 	}
 }
 
-void Battlefield::display_score()
+void Game::display_score()
 {
 	m_strings["score"] = std::make_unique<RenderedString>(
 		std::string{ "SCORE: " + std::to_string(m_score) },
@@ -186,7 +186,7 @@ void Battlefield::display_score()
 	);
 }
 
-void Battlefield::display_lives()
+void Game::display_lives()
 {
 	m_strings["lives"] = std::make_unique<RenderedString>(
 		std::string{ "LIVES: " + std::to_string(m_player->get_lives()) },
@@ -195,13 +195,13 @@ void Battlefield::display_lives()
 		);
 }
 
-void Battlefield::increase_score(int to_add)
+void Game::increase_score(int to_add)
 {
 	m_score += to_add;
 	display_score();
 }
 
-void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
+void Game::spawn_alien(std::array<float, 2> bottom_left)
 {
 	auto alien_ptr = std::make_unique<Alien>(
 		bottom_left,
@@ -219,7 +219,7 @@ void Battlefield::spawn_alien(std::array<float, 2> bottom_left)
 	m_aliens.push_back(std::move(alien_ptr));
 }
 
-void Battlefield::spawn_alien_row(int min_aliens, float padding)
+void Game::spawn_alien_row(int min_aliens, float padding)
 {
 	// Spawn aliens if there are no aliens or if there are too few
 	// and there is space for a new row.
@@ -243,7 +243,7 @@ void Battlefield::spawn_alien_row(int min_aliens, float padding)
 	}
 }
 
-void Battlefield::aliens_shoot(float time_elapsed)
+void Game::aliens_shoot(float time_elapsed)
 {
 	for (auto& alien_ptr : m_aliens)
 	{
@@ -258,7 +258,7 @@ void Battlefield::aliens_shoot(float time_elapsed)
 	}
 }
 
-void Battlefield::move_objects(float time_elapsed)
+void Game::move_objects(float time_elapsed)
 {
 	// Move all movable objects according to velocity
 	move_aliens(time_elapsed);
@@ -267,7 +267,7 @@ void Battlefield::move_objects(float time_elapsed)
 	move_player_bullets(time_elapsed);
 }
 
-void Battlefield::render_objects()
+void Game::render_objects()
 {
 	// Update displayed strings
 	display_score();
@@ -282,7 +282,7 @@ void Battlefield::render_objects()
 	render(m_strings);
 }
 
-void Battlefield::move_aliens(float time_elapsed)
+void Game::move_aliens(float time_elapsed)
 {
 	bool cleanup{ false };
 	for (auto& alien : m_aliens)
@@ -303,7 +303,7 @@ void Battlefield::move_aliens(float time_elapsed)
 	}
 }
 
-void Battlefield::move_alien_bullets(float time_elapsed)
+void Game::move_alien_bullets(float time_elapsed)
 {
 	bool cleanup{ false };
 	for (auto& alien_bullet : m_alien_bullets)
@@ -320,7 +320,7 @@ void Battlefield::move_alien_bullets(float time_elapsed)
 	}
 }
 
-void Battlefield::move_player_bullets(float time_elapsed)
+void Game::move_player_bullets(float time_elapsed)
 {
 	bool cleanup{ false };
 	for (auto& player_bullet : m_player_bullets)
@@ -337,7 +337,7 @@ void Battlefield::move_player_bullets(float time_elapsed)
 	}
 }
 
-void Battlefield::move_player(float time_elapsed)
+void Game::move_player(float time_elapsed)
 {
 	m_player->gradient_move(time_elapsed);
 	// Check that we didn't move the player beyond the battlefield
@@ -369,7 +369,7 @@ void Battlefield::move_player(float time_elapsed)
 
 
 template<typename rObjType>
-void Battlefield::render(std::unique_ptr<rObjType>& r_object)
+void Game::render(std::unique_ptr<rObjType>& r_object)
 {
 	m_renderer->init_render(*r_object, m_window_width, m_window_height);
 	m_renderer->render(*r_object, m_window_width, m_window_height);
@@ -377,7 +377,7 @@ void Battlefield::render(std::unique_ptr<rObjType>& r_object)
 
 
 template<typename rObjType>
-void Battlefield::render(std::vector<std::unique_ptr<rObjType>>& r_objects)
+void Game::render(std::vector<std::unique_ptr<rObjType>>& r_objects)
 {
 	// Clean up empty pointers before rendering
 	if (!r_objects.empty())
@@ -401,7 +401,7 @@ void Battlefield::render(std::vector<std::unique_ptr<rObjType>>& r_objects)
 
 // Render all the strings on the battlefield
 // TODO: Consider moving to a separate file after adding other game screens
-void Battlefield::render(std::map<std::string, std::unique_ptr<RenderedString>>& r_strings)
+void Game::render(std::map<std::string, std::unique_ptr<RenderedString>>& r_strings)
 {
 	for (auto& str : r_strings)
 	{

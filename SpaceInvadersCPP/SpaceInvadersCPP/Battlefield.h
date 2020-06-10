@@ -16,7 +16,7 @@
 #include <vector>
 
 // Manage all the game mechanics
-class Battlefield
+class Game
 {
 private:
 	float m_window_width;
@@ -48,7 +48,7 @@ private:
 	void render(std::vector<std::unique_ptr<rObjType>> &r_objects);
 	void render(std::map<std::string, std::unique_ptr<RenderedString>>& r_strings);
 public:
-	Battlefield(float window_width, float window_height);
+	Game(float window_width, float window_height);
 
 	void setup(int state = 0);
 	void cycle(float time_elapsed, int state = 0);

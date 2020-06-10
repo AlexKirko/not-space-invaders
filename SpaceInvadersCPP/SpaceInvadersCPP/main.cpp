@@ -133,7 +133,7 @@ static GLFWwindow* opengl_setup(int in_window_width, int in_window_height,
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Battlefield* battlefield = static_cast<Battlefield*>(glfwGetWindowUserPointer(window));
+	Game* battlefield = static_cast<Game*>(glfwGetWindowUserPointer(window));
 
 	// Player movement
 	bool movement{ false };
@@ -177,10 +177,10 @@ int main()
 
 	Renderer renderer{};
 
-	Battlefield battlefield{ static_cast<float>(window_width), static_cast<float>(window_height) };
-	glfwSetWindowUserPointer(window, &battlefield);
+	Game game{ static_cast<float>(window_width), static_cast<float>(window_height) };
+	glfwSetWindowUserPointer(window, &game);
 
-	battlefield.setup();
+	game.setup();
 	// Start the main loop
 	double last_loop_time{ glfwGetTime() };
 	double last_move_time{ glfwGetTime() };
@@ -198,7 +198,7 @@ int main()
 		time_elapsed = static_cast<float>(glfwGetTime() - last_move_time);
 		last_move_time = glfwGetTime();
 
-		battlefield.cycle(time_elapsed, 0);
+		game.cycle(time_elapsed, 0);
 
 		// Show rendered window
 		glfwSwapBuffers(window);
