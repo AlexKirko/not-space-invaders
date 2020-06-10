@@ -241,19 +241,12 @@ void Battlefield::move_objects(float time_elapsed)
 
 void Battlefield::render_objects()
 {
-	// Render everything on the battlefield
-	// Be mindful of priority (front objects rendering last)
-	/*
-	render_player();
-	render_aliens();
-	render_alien_bullets();
-	render_player_bullets();
-	*/
-
 	// Update displayed strings
 	display_score();
 	display_lives();
 
+	// Render everything on the battlefield
+	// Be mindful of priority (front objects rendering last)
 	render(m_player);
 	render(m_aliens);
 	render(m_alien_bullets);
