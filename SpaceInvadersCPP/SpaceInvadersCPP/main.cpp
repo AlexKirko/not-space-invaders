@@ -182,7 +182,7 @@ int main()
 	// Spawn the player (spawn coordinates calculated in the Battlefield class)
 	battlefield.create_player();
 	// Display starting score
-	battlefield.set_score();
+	battlefield.display_score();
 	// Start the main loop
 	double last_loop_time{ glfwGetTime() };
 	double last_move_time{ glfwGetTime() };

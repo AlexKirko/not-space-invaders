@@ -148,7 +148,7 @@ void Battlefield::check_alien_hits()
 	}
 }
 
-void Battlefield::set_score()
+void Battlefield::display_score()
 {
 	m_strings["score"] = std::make_unique<RenderedString>(
 		std::string{ "SCORE: " + std::to_string(m_score) },
@@ -160,7 +160,7 @@ void Battlefield::set_score()
 void Battlefield::increase_score(int to_add)
 {
 	m_score += to_add;
-	set_score();
+	display_score();
 }
 
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)

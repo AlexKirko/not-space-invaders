@@ -64,7 +64,7 @@ public:
 	void check_player_hits();
 	void check_alien_hits();
 
-	void set_score();
+	void display_score();
 
 	void increase_score(int to_add);
 
