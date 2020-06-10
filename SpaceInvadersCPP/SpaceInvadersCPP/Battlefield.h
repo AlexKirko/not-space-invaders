@@ -65,6 +65,7 @@ public:
 	void check_alien_hits();
 
 	void display_score();
+	void display_lives();
 
 	void increase_score(int to_add);
 

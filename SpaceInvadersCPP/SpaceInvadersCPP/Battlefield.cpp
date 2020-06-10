@@ -126,6 +126,7 @@ void Battlefield::check_alien_hits()
 				// Remove the bullet and decrease health
 				al_bullet.reset();
 				m_player->lose_life();
+				display_lives();
 			}
 		}
 	}
@@ -155,6 +156,15 @@ void Battlefield::display_score()
 		std::array<float, 2> {450.0, 50.0}, 40.0, 0.65,
 		m_fonts
 	);
+}
+
+void Battlefield::display_lives()
+{
+	m_strings["lives"] = std::make_unique<RenderedString>(
+		std::string{ "LIVES: " + std::to_string(m_player->get_lives()) },
+		std::array<float, 2> {150.0, 50.0}, 40.0, 0.65,
+		m_fonts
+		);
 }
 
 void Battlefield::increase_score(int to_add)

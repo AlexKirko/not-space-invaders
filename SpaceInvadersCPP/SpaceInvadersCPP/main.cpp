@@ -183,6 +183,8 @@ int main()
 	battlefield.create_player();
 	// Display starting score
 	battlefield.display_score();
+	// Display starting lives
+	battlefield.display_lives();
 	// Start the main loop
 	double last_loop_time{ glfwGetTime() };
 	double last_move_time{ glfwGetTime() };
