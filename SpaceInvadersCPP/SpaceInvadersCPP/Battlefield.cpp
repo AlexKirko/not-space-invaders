@@ -11,7 +11,7 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_aliens{}, m_alien_bullets{},
 	m_player{}, m_player_bullets{},
 	m_renderer{ std::make_shared<Renderer>() },
-	m_bottom_padding{ 50.0f },
+	m_bottom_padding{ 100.0f },
 	m_sides_padding{ 100.0f },
 	m_score{ 0 }
 {
@@ -37,7 +37,7 @@ void Battlefield::create_player()
 			// Player spawn X coordinate
 			m_window_width / 2.0f - static_cast<float>(player_size[0]) / 2.0f,
 			// Player spawn Y coordinate
-			m_bottom_padding + static_cast<float>(player_size[1])
+			m_bottom_padding
 		},
 		player_size[0], player_size[1],
 		true, true,
@@ -162,7 +162,7 @@ void Battlefield::display_lives()
 {
 	m_strings["lives"] = std::make_unique<RenderedString>(
 		std::string{ "LIVES: " + std::to_string(m_player->get_lives()) },
-		std::array<float, 2> {150.0, 50.0}, 40.0, 0.65,
+		std::array<float, 2> {100.0, 50.0}, 40.0, 0.65,
 		m_fonts
 		);
 }
@@ -256,9 +256,22 @@ void Battlefield::render_objects()
 
 void Battlefield::move_aliens(float time_elapsed)
 {
+	bool cleanup{ false };
 	for (auto& alien : m_aliens)
 	{
 		alien->gradient_move(time_elapsed);
+		if (alien->get_bottomleft()[1] < m_bottom_padding)
+		{
+			// Destroy off-screen alien
+			// This leaves empty pointers in m_aliens until cleanup
+			// but avoids constant resizing
+			alien.reset();
+
+			// Remove 1 life from the player
+			m_player->lose_life();
+
+			cleanup = true;
+		}
 	}
 }
 
@@ -268,10 +281,10 @@ void Battlefield::move_alien_bullets(float time_elapsed)
 	for (auto& alien_bullet : m_alien_bullets)
 	{
 		alien_bullet->gradient_move(time_elapsed);
-		if (alien_bullet->get_bottomleft()[1] + alien_bullet->get_height() < 0)
+		if (alien_bullet->get_bottomleft()[1] < m_bottom_padding)
 		{
 			// Destroy off-screen bullet
-			// This leaves empty pointers in m_alien_bullets
+			// This leaves empty pointers in m_alien_bullets until cleanup
 			// but avoids constant resizing
 			alien_bullet.reset();
 			cleanup = true;
