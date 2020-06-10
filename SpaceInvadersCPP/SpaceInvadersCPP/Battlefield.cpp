@@ -250,6 +250,10 @@ void Battlefield::render_objects()
 	render_player_bullets();
 	*/
 
+	// Update displayed strings
+	display_score();
+	display_lives();
+
 	render(m_player);
 	render(m_aliens);
 	render(m_alien_bullets);
