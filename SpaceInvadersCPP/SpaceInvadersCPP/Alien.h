@@ -23,6 +23,7 @@ private:
 	static std::uniform_int_distribution<int> rng;
 
 	int m_hp;
+	int m_score;
 
 	Hitbox m_hitbox;
 public:
@@ -41,7 +42,7 @@ public:
 				velocity,
 				color,
 				textures },
-			m_hp{ 1 },
+			m_hp{ 1 }, m_score{ 100 },
 		m_hitbox{ hitbox_width, hitbox_height}
 	{ 
 		m_hitbox.move_to_r_object(*this);
@@ -54,6 +55,7 @@ public:
 
 	void decrease_hp(int damage) { m_hp -= damage; }
 	const int get_hp() const { return m_hp; }
+	const int get_score() const { return m_score; }
 	const Hitbox& get_hitbox() const { return m_hitbox; }
 
 	// Consider making virtual if necessity rises

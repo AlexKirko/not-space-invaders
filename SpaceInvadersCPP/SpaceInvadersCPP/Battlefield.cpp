@@ -12,7 +12,8 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_player{}, m_player_bullets{},
 	m_renderer{ std::make_shared<Renderer>() },
 	m_bottom_padding{ 50.0f },
-	m_sides_padding{ 100.0f }
+	m_sides_padding{ 100.0f },
+	m_score{ 0 }
 {
 	// Load test texture.
 	auto al_texture1 = std::make_unique<Texture>("res/textures/cpp_logo_200.png");
@@ -90,10 +91,14 @@ void Battlefield::check_player_hits()
 				};
 				if (hit)
 				{
-					// Remove the bullet and the alien
-					pl_bullet.reset();
-					alien.reset();
-					// TODO : add to score
+					alien->decrease_hp(1);
+					if (alien->get_hp() <= 0) {
+						increase_score(alien->get_score());
+						// Remove the bullet and the alien
+						pl_bullet.reset();
+						alien.reset();
+						// TODO : add to score
+					}
 				}
 			}
 		}
@@ -143,13 +148,19 @@ void Battlefield::check_alien_hits()
 	}
 }
 
-void Battlefield::create_score()
+void Battlefield::set_score()
 {
 	m_strings["score"] = std::make_unique<RenderedString>(
-		std::string{ "SCORE: 0" },
-		std::array<float, 2> {500.0, 50.0}, 40.0, 0.65,
+		std::string{ "SCORE: " + std::to_string(m_score) },
+		std::array<float, 2> {450.0, 50.0}, 40.0, 0.65,
 		m_fonts
 	);
+}
+
+void Battlefield::increase_score(int to_add)
+{
+	m_score += to_add;
+	set_score();
 }
 
 void Battlefield::spawn_alien(std::array<float, 2> bottom_left)

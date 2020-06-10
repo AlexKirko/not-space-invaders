@@ -35,6 +35,8 @@ private:
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_player_textures;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_fonts;
 
+	int m_score;
+
 	void move_aliens(float time_elapsed);
 	void move_alien_bullets(float time_elapsed);
 	void move_player_bullets(float time_elapsed);
@@ -62,7 +64,9 @@ public:
 	void check_player_hits();
 	void check_alien_hits();
 
-	void create_score();
+	void set_score();
+
+	void increase_score(int to_add);
 
 	void move_objects(float time_elapsed);
 	void render_objects();
