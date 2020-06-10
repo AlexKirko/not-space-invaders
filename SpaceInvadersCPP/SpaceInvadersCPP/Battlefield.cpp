@@ -145,11 +145,10 @@ void Battlefield::check_alien_hits()
 
 void Battlefield::create_score()
 {
-	m_strings.push_back(std::make_unique<RenderedString>(
+	m_strings["score"] = std::make_unique<RenderedString>(
 		std::string{ "SCORE: 0" },
 		std::array<float, 2> {500.0, 50.0}, 40.0, 0.65,
 		m_fonts
-		)
 	);
 }
 
@@ -343,11 +342,11 @@ void Battlefield::render(std::vector<std::unique_ptr<rObjType>>& r_objects)
 
 // Render all the strings on the battlefield
 // TODO: Consider moving to a separate file after adding other game screens
-void Battlefield::render(std::vector<std::unique_ptr<RenderedString>>& r_strings)
+void Battlefield::render(std::map<std::string, std::unique_ptr<RenderedString>>& r_strings)
 {
 	for (auto& str : r_strings)
 	{
-		for (auto& lett : str->get_letters())
+		for (auto& lett : str.second->get_letters())
 		{
 			render(lett);
 		}

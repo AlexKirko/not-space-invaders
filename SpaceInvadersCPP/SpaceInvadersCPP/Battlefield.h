@@ -11,6 +11,7 @@
 #include "RenderedString.h"
 
 #include <algorithm>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -29,7 +30,7 @@ private:
 	std::vector<std::unique_ptr<AlienBullet>> m_alien_bullets;
 	std::unique_ptr<Player> m_player;
 	std::vector<std::unique_ptr<PlayerBullet>> m_player_bullets;
-	std::vector<std::unique_ptr<RenderedString>> m_strings;
+	std::map<std::string, std::unique_ptr<RenderedString>> m_strings;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_alien_textures;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_player_textures;
 	std::shared_ptr<std::vector<std::unique_ptr<Texture>>> m_fonts;
@@ -43,7 +44,7 @@ private:
 	void render(std::unique_ptr<rObjType>& r_object);
 	template<typename rObjType>
 	void render(std::vector<std::unique_ptr<rObjType>> &r_objects);
-	void render(std::vector<std::unique_ptr<RenderedString>> &r_strings);
+	void render(std::map<std::string, std::unique_ptr<RenderedString>>& r_strings);
 public:
 	Battlefield(float window_width, float window_height);
 
