@@ -29,6 +29,34 @@ Battlefield::Battlefield(float window_width, float window_height) :
 	m_fonts->push_back(std::move(fnt_texture1));
 }
 
+// Prepare the game for displaying
+void Battlefield::setup(int state)
+{
+	if (state == 0)
+	{
+		create_player();
+	}
+}
+
+// Do all the per-cycle updates
+void Battlefield::cycle(float time_elapsed, int state)
+{
+	if (state == 0)
+	{
+		spawn_alien_row(21, 10.0);
+		// Ticking actions
+		aliens_shoot(time_elapsed);
+
+		get_player()->tick_time(time_elapsed);
+		player_shoots();
+		move_objects(time_elapsed);
+		check_hits();
+
+		render_objects();
+
+	}
+}
+
 void Battlefield::create_player()
 {
 	std::array<int, 2> player_size{ 60, 60 };

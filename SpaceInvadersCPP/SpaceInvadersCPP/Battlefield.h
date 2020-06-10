@@ -50,6 +50,9 @@ private:
 public:
 	Battlefield(float window_width, float window_height);
 
+	void setup(int state = 0);
+	void cycle(float time_elapsed, int state = 0);
+
 	const float get_player_speed() const { return m_player_speed; }
 
 	void spawn_alien(std::array<float, 2> bottom_left);

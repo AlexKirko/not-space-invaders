@@ -179,8 +179,8 @@ int main()
 
 	Battlefield battlefield{ static_cast<float>(window_width), static_cast<float>(window_height) };
 	glfwSetWindowUserPointer(window, &battlefield);
-	// Spawn the player (spawn coordinates calculated in the Battlefield class)
-	battlefield.create_player();
+
+	battlefield.setup();
 	// Start the main loop
 	double last_loop_time{ glfwGetTime() };
 	double last_move_time{ glfwGetTime() };
@@ -192,24 +192,13 @@ int main()
 
 		last_loop_time = glfwGetTime();
 
-		battlefield.spawn_alien_row(21, 10.0);
 		//if (glfwGetTime() - last_move_time > 0.05)
 		//{
 		//}
 		time_elapsed = static_cast<float>(glfwGetTime() - last_move_time);
 		last_move_time = glfwGetTime();
 
-		// Ticking actions
-		battlefield.aliens_shoot(time_elapsed);
-
-		battlefield.get_player()->tick_time(time_elapsed);
-		battlefield.player_shoots();
-
-		battlefield.move_objects(time_elapsed);
-
-		battlefield.check_hits();
-
-		battlefield.render_objects();
+		battlefield.cycle(time_elapsed, 0);
 
 		// Show rendered window
 		glfwSwapBuffers(window);
