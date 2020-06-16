@@ -12,6 +12,6 @@ I'm a fan of project-based learning and getting your work to a state where you a
 
 ## Installation instructions
 
-This is a Viasual Studio project, and the required external libraries are included. The solution is inside the `SpaceInvadersCPP` folder It should run on Windows NVIDIA after cloning. If not in Windows or running another OS, comment out `#define NVIDIA_GPU` in the main file, and you should be fine. This code forces the program to run on a non-integrated NVIDIA GPU on Windows instead of the pathetic integrated one. You might need something similar on a different system, if the program ends up writing on the cardboard box that is the integrated graphics adapter.
+This is a Visual Studio project, and the required external libraries are included. The solution is inside the `SpaceInvadersCPP` folder It should run on Windows NVIDIA after cloning. If not in Windows or running on another GPU, comment out `#define NVIDIA_GPU` in the main file, and you should be fine. That bit of code forces the program to run on a non-integrated NVIDIA GPU on Windows instead of the pathetic integrated one. You might need something similar on a different system if the program ends up running on the cardboard box that is the integrated graphics adapter.
 
-More detailed instructions will follow once I'm done playing with it.
+More detailed instructions will follow once I'm done playing with the project.
