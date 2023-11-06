@@ -6,7 +6,7 @@ This project is a Space Invaders-like game coded in OpenGL and aiming to be cros
 
 There are good reasons to code a simple game while learning a new programming language. For C++ specifically, it requires abstracting barebone APIs (OpenGL), polymorphism, resource management, and a huge pile of other skills that I would have forgotten without deciding on this project.
 
-By far, the most interesting part of this was writing my own little sprite-drawing graphical engine. I intend to unbundle it from the project into a separate repo, because the OpenGL sprite engines I'd been able to Google either suffer from serious overengineering and feature creep or don't do enough.
+By far, the most interesting part of this was writing my own little sprite-drawing graphical engine. I intended to unbundle it from the project into a separate repo, because the OpenGL sprite engines I'd been able to Google either suffer from serious overengineering and feature creep or don't do enough. I don't have the time right now, but if you'd like to build on top of it, go right ahead, just mention my contribution somewhere.
 
 I'm a fan of project-based learning and getting your work to a state where you aren't ashamed of showing it, so here it is.
 
